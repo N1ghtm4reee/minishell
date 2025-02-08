@@ -254,6 +254,19 @@ int size_pids(t_pids *pids)
     }
     return (size);
 }
+
+int count_commands(t_list *c)
+{
+    int i = 0;
+    while(c)
+    {
+        if (!c->type)
+            i++;
+        c = c->next;
+    }
+    return i;
+}
+
 void exceute_cmds(t_exec *executor)
 {
     t_pipes pipes;
@@ -377,7 +390,6 @@ void exceute_cmds(t_exec *executor)
         }
         cmd = cmd->next;
     }
-    int i = 0;
     t_pids * temp = executor->pids;
     while(temp)
     {
@@ -386,7 +398,7 @@ void exceute_cmds(t_exec *executor)
         set_exit_status(WEXITSTATUS(status));
         if (WIFSIGNALED(status))
         {
-            if (WTERMSIG(status) ==  SIGQUIT)
+            if ((WTERMSIG(status) ==  SIGQUIT) && count_commands(executor->commands_list) == 1)
             {
                 write(2, "Quit (core dumped)\n", 19);
                 set_exit_status(131);
