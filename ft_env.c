@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void ft_env(char  **argument, t_env **env)
+int ft_env(char  **argument, t_env **env)
 {
     int ac;
     ac = 0;
@@ -8,4 +8,5 @@ void ft_env(char  **argument, t_env **env)
         ac++;
     if(ac == 1)
         print_env(*env);
+    return 0;
 }

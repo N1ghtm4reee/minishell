@@ -18,6 +18,7 @@ int valid_opt(char *str)
     }
     return (0);
 }
+
 int ft_echo(char **argument)
 {
     int i ;

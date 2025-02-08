@@ -13,16 +13,21 @@ char *get_env_value(t_env *my_env, char *var)
     }
     return(NULL);
 }
-void ft_pwd(t_env **my_env)
-{
-    char *pwd;
 
-    pwd = get_env_value(*my_env, "PWD");
-    if(pwd)
+int ft_pwd (t_exec *executor)
+{
+    char pwd[4069];
+    char *str;
+    str = getcwd(pwd, 4096);
+    if(str)
     {
-        write(1, pwd, ft_strlen(pwd));
+        write(1, str, ft_strlen(str));
         write(1, "\n", 1);
     }
-    else
-        perror("no value for pwd");
+    if (!str)
+    {
+        write(1, executor->last_pwd, ft_strlen(executor->last_pwd));
+        write(1, "\n", 1);
+    }
+    return (0);
 }

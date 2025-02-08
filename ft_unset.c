@@ -44,16 +44,16 @@ void unset_argument(char *str, t_env **my_env)
         temp = temp->next;
     }
 }
-void ft_unset(char **argument, t_env **my_env)
-{
 
+int ft_unset(char **argument, t_env **my_env)
+{
     int ac;
 
     ac = 0;
     while(argument[ac])
         ac++;
     if(ac == 1)
-        return;
+        return 0;
     int i;
     i =  1;
     while(argument[i])
@@ -63,8 +63,7 @@ void ft_unset(char **argument, t_env **my_env)
             if (var_exist(*my_env, argument[i]))
                 unset_argument(argument[i], my_env);
         }
-        else
-            printf("bash: unset: `%s': not a valid identifier", argument[i]);
         i++;
     }
+    return 0;
 }

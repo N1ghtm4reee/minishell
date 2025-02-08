@@ -6,295 +6,11 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:36:31 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/01/14 11:14:55 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/08 17:07:14 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*get_command(char *cmd, char **paths)
-{
-	char	*tmp;
-	char	*command;
-	int		i;
-
-	i = 0;
-	while (paths[i])
-	{
-		tmp = ft_strjoin1(paths[i], "/");
-		command = ft_strjoin1(tmp, cmd);
-		free(tmp);
-		if (access(command, F_OK) == 0)
-			return (command);
-		free(command);
-		i++;
-	}
-	return (NULL);
-}
-
-int count_size(char **tokens)
-{
-	int i = 0;
-	int count = 0;
-	while(tokens[i])
-	{
-		count++;
-        i++;
-    }
-	return (count);
-}
-
-int count_tokens(char *s)
-{
-    int i = 0;
-    int tokens = 0;
-    
-    while (s[i])
-    {
-        while (s[i] && s[i] == ' ')
-            i++;
-        if (!s[i])
-            break;
-            
-        tokens++;
-        
-        while (s[i])
-        {
-            if (s[i] == '"' || s[i] == '\'')
-            {
-                char quote = s[i];
-                i++;
-                while (s[i] && s[i] != quote)
-                    i++;
-                if (s[i])
-                    i++;
-            }
-            else if (s[i] == ' ')
-                break;
-            else
-                i++;
-        }
-    }
-    return tokens;
-}
-
-char ***ft_split_tokens(char **tokens)
-{
-    char ***commands = gc_malloc(sizeof(char **) * (count_size(tokens) + 1));
-    int i = 0;
-
-    while (tokens[i])
-    {
-        int tokens_inside = count_tokens(tokens[i]);
-        commands[i] = gc_malloc(sizeof(char *) * (tokens_inside + 1));
-        int j = 0;
-        int index = 0;
-        
-        while (tokens[i][index])
-        {
-            while (tokens[i][index] && tokens[i][index] == ' ')
-                index++;
-            if (!tokens[i][index])
-                break;
-            int start = index;
-            int len = 0;
-            int in_quotes = 0;
-            char quote_type = 0;
-            while (tokens[i][index])
-            {
-                if (!in_quotes && (tokens[i][index] == '"' || tokens[i][index] == '\''))
-                {
-                    quote_type = tokens[i][index];
-                    in_quotes = 1;
-                }
-                else if (in_quotes && tokens[i][index] == quote_type)
-                {
-                    in_quotes = 0;
-                    quote_type = 0;
-                }
-                else if (!in_quotes && tokens[i][index] == ' ')
-                    break;
-                
-                len++;
-                index++;
-            }
-            commands[i][j] = gc_malloc(sizeof(char) * (len + 1));
-            int k = 0;
-            in_quotes = 0;
-            for (int pos = start; pos < start + len; pos++)
-            {
-                if (tokens[i][pos] == '"' || tokens[i][pos] == '\'')
-                {
-                    if (!in_quotes)
-                        in_quotes = 1;
-                    else
-                        in_quotes = 0;
-                    continue;
-                }
-                commands[i][j][k++] = tokens[i][pos];
-            }
-            commands[i][j][k] = '\0';
-            j++;
-        }
-        commands[i][j] = NULL;
-        i++;
-    }
-    commands[i] = NULL;
-    return commands;
-}
-
-int check_type(char *s)
-{
-    if (ft_strcmp(s, "|") == 0)
-        return 1;
-    if (ft_strcmp(s, ">>") == 0)
-        return 4;
-    if (ft_strcmp(s, "<<") == 0)
-        return 5;
-    if (ft_strcmp(s, ">") == 0)
-        return 3;
-    if (ft_strcmp(s, "<") == 0)
-        return 2;
-    return (0);
-}
-
-t_list *parse_list(char ***commands)
-{
-    t_list *head = gc_malloc(sizeof(t_list));
-    if (!head)
-        return NULL;
-    t_list *p = head;
-    int i = 0;
-    p->type = check_type(commands[i][0]);
-    int c = p->type;
-    p->command = commands[i++];
-    p->next = NULL;
-    while(commands[i])
-    {
-        t_list *new = gc_malloc(sizeof(t_list));
-        if (!new)
-            return NULL;
-        new->command = commands[i];
-        if (c == 2)
-            new->type = 22;
-        else if (c == 3)
-            new->type = 33;
-        else if (c == 4)
-            new->type = 44;
-        else if (c == 5)
-            new->type = 55;
-        else
-            new->type = check_type(commands[i][0]);
-        c = new->type;
-        new->next = NULL;
-        p->next = new;
-        p = p->next;
-        i++;
-    }
-    return head;
-}
-
-// "hello""world"
-char **ft_split_pipes(char *s)
-{
-    int count = 0;
-    int i = 0;
-    while (s[i])
-    {
-        while (s[i] == ' ')
-            i++;
-        if (s[i + 1] && s[i] == '>' && s[i + 1] == '>')
-        {
-            if (is_special(s[i + 2]))
-            {
-                printf("Syntax error: Consecutive operators\n");
-                exit(2);
-            }
-            count++;
-            i += 2;
-        }
-        else if (s[i + 1] && s[i] == '<' && s[i + 1] == '<')
-        {
-            if (is_special(s[i + 2]))
-            {
-                printf("Syntax error: Consecutive operators\n");
-                exit(2);
-            }
-            count++;
-            i += 2;
-        }
-        else if (s[i] == '|' || s[i] == '>' || s[i] == '<')
-        {
-            count++;
-            i++;
-        }
-        else if (s[i])
-        {
-            count++;
-            while (s[i] && s[i] != '|' && s[i] != '<' && s[i] != '>')
-                i++;
-        }
-    }
-    char **arr = gc_malloc(sizeof(char *) * (count + 1));
-    i = 0;
-    int k = 0;
-    while(k < count)
-    {
-        while(s[i] && s[i] == ' ')
-            i++;
-        if (!s[i])
-            break;
-        int st = i;
-        while(s[i] && s[i] != '|' && s[i] != '<' && s[i] != '>')
-        {
-            char c = s[i];
-            if (c == '\"' || c == '\'')
-            {
-                while(s[i] && s[i] == c)
-                    i++;
-                while(s[i] && s[i] != c)
-                    i++;
-            }
-            i++;
-        }
-        int e = i;
-        arr[k] = gc_malloc(sizeof(char) * (e - st + 1));
-        int j = 0;
-        while(st < e)
-            arr[k][j++] = s[st++];
-        arr[k++][j] = '\0';
-        if (s[i + 1] && s[i] == '>' && s[i + 1] == '>')
-        {
-            arr[k] = gc_malloc(sizeof(char) * 3);
-            arr[k][0] = '>';
-            arr[k][1] = '>';
-            arr[k++][2] = '\0';
-            i += 2;
-        }
-        else if (s[i + 1] && s[i] == '<' && s[i + 1] == '<')
-        {
-            arr[k] = gc_malloc(sizeof(char) * 3);
-            arr[k][0] = '<';
-            arr[k][1] = '<';
-            arr[k++][2] = '\0';
-            i += 2;
-        }
-        else if (s[i] == '|' || s[i] == '>' || s[i] == '<')
-        {
-            arr[k] = gc_malloc(sizeof(char) * 2);
-            if (s[i] == '|')
-                arr[k][0] = '|';
-            else if (s[i] == '<')
-                arr[k][0] = '<';
-            else if (s[i] == '>')
-                arr[k][0] = '>';
-            arr[k++][1] = '\0';
-            i++;
-        }
-    }
-    arr[k] = NULL;
-    return arr;
-}
 
 int list_size(t_list *lst)
 {
@@ -307,119 +23,251 @@ int list_size(t_list *lst)
     return i;
 }
 
-char *expand_in_quotes(char *s, char c)
+int ft_var_compare(char *str, char *var_name)
+{
+    int  i = 0;
+    if  (ft_strlen(str) != ft_strlen(var_name))
+        return 1;
+    while((str[i] && var_name[i]) && str[i] == var_name[i])
+        i++;
+    return (str[i] - var_name[i]);
+}
+
+char *find_in_env(t_env *env, char *str)
+{
+    t_env *p = env;
+    while(p)
+    {
+        if (ft_var_compare(str, p->var_name) == 0)
+            return (p->var_value);
+        p = p->next;
+    }
+    return (NULL);
+}
+
+int is_in_arr(int counter, int *arr)
 {
     int i = 0;
-    int dollar = 0;
-    char *str;
-    int counter = 0;
-    while(s[i])
+    while(arr[i] != -2)
     {
-        if (s[i] == '$')
-            dollar = 1;
+        if (arr[i] == counter)
+            return 1;
         i++;
     }
-    i = 0;
-    while(s[i])
-    {
-        if (s[i] != '\'' && s[i] != '\"')
-            break;
-        i++;
-        if (!s[i])
-            return NULL;
-    }
-    i = 0;
-    int j = 0;
-    if (dollar == 1)
-    {
-        //state machine to know if should expand or not
+    return 0;
+}
+
+// char *new_str(char *s, int to_skip)
+// {
+//     if (s[to_skip] && !s[to_skip + 1])
+//         return ft_strdup("");
+//     int i = 0;
+//     char *str = gc_malloc(sizeof(char) * (ft_strlen(s) + 1));
+//     if (!str)
+//         return NULL;
+//     int j = 0;
+//     while(s[i])
+//     {
+//         if (i == to_skip)
+//             i += 2;
+//         str[j++] = s[i++];
+//     }
+//     str[j] = '\0';
+//     return str;
+// }
+
+char *new_str(char *s, int to_skip)
+{
+    if (!s)
         return NULL;
-    }
-    else
+    if (!s[0])
+        return ft_strdup("");
+    if (s[to_skip] && !s[to_skip + 1])
+        return ft_strdup("");
+    size_t len = ft_strlen(s);
+
+    if (to_skip >= len)
+        return ft_strdup(s);
+    char *str = gc_malloc(sizeof(char) * len);
+    if (!str)
+        return NULL;
+    int i = 0;
+    int j = 0;
+    while (s[i] && i < len)
     {
-        while(s[i])
+        if (i == to_skip && i + 1 < len)
         {
-            if (s[i] != c)
-                counter++;
-            i++;
+            i += 2;  // Skip the $$ characters
+            if (i >= len)  // If we went past the end
+                break;
         }
-        i = 0;
-        str = gc_malloc(sizeof(char) * (counter + 1));
-        while(s[i])
-        {
-            if (s[i] != c)
-                str[j++] = s[i];
-            i++;
-        }
-        str[j] = '\0';
+        if (i < len)
+            str[j++] = s[i++];
     }
-    // printf("%s\n", str);
-    // printf("%c\n", c);
-    // printf("%d\n", counter);
+    str[j] = '\0';
     return str;
 }
 
-
-t_list *expand(t_list *commands)
+int check_if_limiter(char *s, int i)
 {
-    t_list *expanded_list = gc_malloc(sizeof(t_list));;
-
-    t_list *p = commands;
-    char *s = NULL;
-    while(p)
+    i--;
+    while(i > 0)
     {
-        int i = 0;
-        // e_p = gc_malloc(sizeof(t_list));
-        // if (p->type == 0)
-        // {
-            while(p->command[i])
+        if (s[i] == '<' && s[i - 1] == '<')
+            return (0);
+        if (ft_isalnum(s[i]))
+            break;
+        i--;
+    }
+    return (1);
+}
+
+static char **split_env_value(char *value) 
+{
+    char *trimmed;
+    char **split;
+    
+    if (!value)
+        return NULL;
+    trimmed = ft_strtrim(value, " \t\n");
+    split = ft_split(trimmed, ' ');
+    return split;
+}
+
+static int count_expanded_words(char *env_value)
+{
+    char **split;
+    int count = 0;
+    
+    split = split_env_value(env_value);
+    if (!split)
+        return 0;
+    while (split[count])
+        count++;
+    return count;
+}
+
+int count_words(char *s)
+{
+    int i = 0;
+    int count = -1;
+    while(s[i])
+    {
+        while(s[i] && s[i] == ' ')
+            i++;
+        if (s[i])
+            count++;
+        while(s[i] && s[i] != ' ')
+        {
+            if (s[i] == '"')
             {
-                //check if it has a dollar sign or not
-                if ((p->command[i][0] == '"' || p->command[i][0] == '\''))
-                {
-                    // printf("%s|\n", p->command[i]);
-                    p->command[i] = expand_in_quotes(p->command[i], p->command[i][0]);
-                    // printf("%s\n", p->command[i]);
-                }
-                // else
-                //     s = normal_expand();
-                // p->command[i] = s;
+                char c = s[i++];
+                while(s[i] && s[i] != c)
+                    i++;
                 i++;
             }
-        // }
-        p = p->next;
+            else
+                i++;
+        }
     }
-    return commands;
+    return count;
 }
-// echo ""''""
+
 int simple_parsing(char *s, t_exec *executor)
 {
-    char *str = ft_strtrim(s, " \n");
+    t_sig *stats = sig_handler();
+    char *str = ft_strtrim(s, " \t\n\r\n\f");
     if (!str[0])
         return 1;
     if (syntax_errors(str))
-        return 1;
-    // printf("%s\n", str);
-    // char *str_expanded = expand(s);
+        return (set_exit_status(2), 1);
     executor->tokens = ft_split_pipes(str);
-    // int i = 0;
-    // while(executor->tokens[i])
-    // {
-    //     printf("%s\n", executor->tokens[i++]);
-    // }
 	executor->commands = ft_split_tokens(executor->tokens);
     executor->commands_list = parse_list(executor->commands);
-    //expand
-    executor->commands_list = expand(executor->commands_list);
+    // 	int i;
     // while(executor->commands_list)
     // {
-    //     int i = 0;
+    //     i = 0;
     //     while(executor->commands_list->command[i])
     //     {
-    //         printf("%s,", executor->commands_list->command[i++]);
+    //         printf("|%s|,", executor->commands_list->command[i++]);
     //     }
     //     printf("\n");
     //     executor->commands_list = executor->commands_list->next;
     // }
+    executor->commands_list = expand(executor, executor->commands_list);
+    if (!executor->commands_list)
+        return (1);
+    stats->reading_from_here_doc = 1;
+    stats->pid = fork();
+    if (!stats->pid)
+        handle_here_doc(executor);
+    else if(stats->pid > 0)
+    {
+        int status;
+        waitpid(stats->pid, &status, 0);
+        stats->reading_from_here_doc = 0;
+        set_exit_status(WEXITSTATUS(status));
+        if (WIFSIGNALED(status))
+        {
+            if (WTERMSIG(status) == SIGINT)
+            {
+                set_exit_status(WEXITSTATUS(status));
+                return 1;
+            }
+        }
+    }
     return (0);
 }
+
+
+
+        // if (WEXITSTATUS(status))
+        //     return 1;
+
+
+
+//  t_list *tmp = executor->commands_list;
+//     while(tmp)
+//     {
+//         int i = 0;
+//         int f = 0;
+//         while(tmp->command[i])
+//         {
+//             if (tmp->type == 22 || tmp->type == 33 || tmp->type == 44)
+//             {
+//                 if (!tmp->command[0] || !tmp->command[0][0])
+//                 {
+//                     write(2, "minishell : No such file or directory\n", 38);
+//                     set_exit_status(1);
+//                     return 1;
+//                 }
+//             }
+//             if (ft_strcmp(executor->commands_list->command[0], ".") == 0)
+//             {
+//                 write(2, "minishell: .: filename argument required\n", 41);
+//                 write(2, ".: usage: . filename [arguments]\n", 33);
+//                 set_exit_status(2);
+//                 return 1;
+//             }
+//             else if (ft_strcmp(tmp->command[i], "..") == 0)
+//             {
+//                 if (ft_strcmp(tmp->command[0], "cd"))
+//                 {
+//                     write(2, "Error : command not found: ..\n", 30);
+//                     set_exit_status(127);
+//                     return 1;
+//                 }
+//             }
+//             else if (executor->commands_list->command[0][0] == '/')//need to fix
+//             {
+//                 write(2, "minishell: ", 11);
+//                 write(2, tmp->command[i], ft_strlen(tmp->command[i]));
+//                 write(2, ": Is a directory\n", 17);
+//                 set_exit_status(126);
+//                 return 1;
+//             }
+//             i++;
+//         }
+//         tmp = tmp->next;
+//     }

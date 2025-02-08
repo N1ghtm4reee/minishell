@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 18:26:32 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/01/13 11:41:09 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/05 23:17:55 by mlouati          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ t_env *new_env(char *str)
     new->next = NULL;
     return(new);
 }
+
 void add_back_env(t_env **my_env, t_env *new)
 {
     if(!new || !my_env)
@@ -122,3 +123,5 @@ void print_env(t_env *my_env)
         temp = temp->next;
     }
 }
+
+//find in env (traverse the list and find the key and return its value) to replace getenv();

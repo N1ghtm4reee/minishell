@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:59:07 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/01/14 11:14:47 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/08 16:46:04 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ char	*ft_strdup(const char *s)
 
 int ft_strcmp(char *s1, char *s2)
 {
+	if (!s1 || !s2)
+		return (1);
 	int i = 0;
 	while(s1[i] && (s1[i] == s2[i]))
 		i++;
@@ -92,11 +94,11 @@ char	*ft_substr(char *s, int start, int len)
 	return (sub);
 }
 
-int	ft_atoi(char *str)
+long long ft_atoi(char *str, int *error)
 {
 	int	i;
 	int	signe;
-	int	res;
+	long long res;
 
 	i = 0;
 	signe = 1;
@@ -109,11 +111,17 @@ int	ft_atoi(char *str)
 			signe = -1;
 		i++;
 	}
+    while(str[i] == '0')
+        i++;
+    int start = 0;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		res = res * 10 + (str[i] - '0');
 		i++;
+        start++;
 	}
+    if (start >= 20 || res*signe > LONG_MAX || res*signe < LONG_MIN)
+        *error = 1;
 	return (signe * res);
 }
 
@@ -136,4 +144,19 @@ int	ft_isalnum(int c)
 	if (ft_isalpha(c) == 1 || ft_isdigit(c) == 1)
 		return (1);
 	return (0);
+}
+
+char *append_str(char c)
+{
+	char *s = gc_malloc(sizeof(char) * 2);
+	s[0] = c;
+	s[1] = '\0';
+	return s;
+}
+
+int ft_isspace(char c)
+{
+	if (c == ' ' || c == '\t' || c == '\v' || c == '\n' || c == '\f')
+		return 1;
+	return 0;
 }

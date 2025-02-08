@@ -58,7 +58,7 @@ void *gc_malloc(size_t bytes)
 void free_all_in_gc()
 {
     // t_gc *t_head = get_head();
-    
+
     t_gc *current = head;
     while (current) {
         free(current->p);
