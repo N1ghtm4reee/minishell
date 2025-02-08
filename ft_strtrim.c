@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 17:22:50 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 16:35:47 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/08 18:20:50 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	t_length(const char *s, const char *set, int *ss, int *e)
 
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	char	*d;
+	char	*d = NULL;
 	int		start;
 	int		end;
 	int		t_len;

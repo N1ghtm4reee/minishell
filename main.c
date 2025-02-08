@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:42:23 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 17:36:19 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/08 18:59:58 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,15 @@ void setup_signals()
     sigaction(SIGQUIT, &sa, 0);
 }
 
+void init_executor(t_exec *executor, char **envp, t_env *my_env)
+{
+    executor->envp = envp;
+    executor->path = NULL;
+    executor->env = my_env;
+    executor->pids = NULL;
+    executor->last_pwd = NULL; 
+}
+
 int main(int ac, char **av, char **envp)
 {
     if (ac != 1)
@@ -107,6 +116,7 @@ int main(int ac, char **av, char **envp)
     t_sig *sig_state = sig_handler();
     while(1)
     {
+        init_executor(&executor, envp, my_env);
         signal(SIGINT, handle_ctrlc);
         sig_state->executing = 0;
         signal(SIGQUIT, SIG_IGN);
@@ -124,3 +134,6 @@ int main(int ac, char **av, char **envp)
     }
     return (0);
 }
+
+// 32  1
+// 5289 170

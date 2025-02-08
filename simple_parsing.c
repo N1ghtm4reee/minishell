@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:36:31 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 17:07:14 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/08 18:57:54 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,25 +176,14 @@ int count_words(char *s)
 int simple_parsing(char *s, t_exec *executor)
 {
     t_sig *stats = sig_handler();
-    char *str = ft_strtrim(s, " \t\n\r\n\f");
+    char *str = ft_strtrim(ft_strdup(s), " \t\n\r\n\f");
     if (!str[0])
-        return 1;
+        return (1);
     if (syntax_errors(str))
         return (set_exit_status(2), 1);
     executor->tokens = ft_split_pipes(str);
 	executor->commands = ft_split_tokens(executor->tokens);
     executor->commands_list = parse_list(executor->commands);
-    // 	int i;
-    // while(executor->commands_list)
-    // {
-    //     i = 0;
-    //     while(executor->commands_list->command[i])
-    //     {
-    //         printf("|%s|,", executor->commands_list->command[i++]);
-    //     }
-    //     printf("\n");
-    //     executor->commands_list = executor->commands_list->next;
-    // }
     executor->commands_list = expand(executor, executor->commands_list);
     if (!executor->commands_list)
         return (1);
@@ -271,3 +260,15 @@ int simple_parsing(char *s, t_exec *executor)
 //         }
 //         tmp = tmp->next;
 //     }
+
+// 	int i;
+    // while(executor->commands_list)
+    // {
+    //     i = 0;
+    //     while(executor->commands_list->command[i])
+    //     {
+    //         printf("|%s|,", executor->commands_list->command[i++]);
+    //     }
+    //     printf("\n");
+    //     executor->commands_list = executor->commands_list->next;
+    // }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 18:26:32 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/05 23:17:55 by mlouati          ###   ########.fr       */
+/*   Updated: 2025/02/08 18:25:06 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,10 @@ t_env *new_env(char *str)
     new = (t_env *)malloc(sizeof(t_env));
     if(!new)
         return(NULL);
-    new->var_name = ft_substr(str, 0, indice);
+    new->var_name = ft_substr_malloc(str, 0, indice);
     if(!new->var_name)
         return(free(new), NULL);
-    new->var_value = ft_substr(str, indice +1, ft_strlen(str) -indice -1);
+    new->var_value = ft_substr_malloc(str, indice +1, ft_strlen(str) -indice -1);
     if(!new->var_value)
     {
         free(new->var_name);

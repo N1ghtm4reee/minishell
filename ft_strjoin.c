@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:57:28 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 16:35:38 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/08 18:25:04 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*ft_strjoin1(char *s1, char *s2)
 	j = 0;
 	if (!s1)
 		s1 = ft_strdup("");
-	d = ft_calloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1), 1);
+	d = gc_malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!d)
 		return (free(s1), exit(1), NULL);
 	if (s1)

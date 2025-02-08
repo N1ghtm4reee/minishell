@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:56:30 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 17:14:10 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/08 18:49:15 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ int	syntax_errors(char *s)
 		return (ft_printf(2, "Syntax error: Invalid Operator place\n"), 1);
 	if (check_unmatched_quotes(s))
 		return (ft_printf(2, "Syntax error: Unmatched quotes\n"), 1);
-	// if (check_operator_after_operator(s))
-	// 	return (ft_printf(2, "Syntax error: Consecutive operators\n"), 1);
+	if (check_operator_after_operator(s))
+		return (ft_printf(2, "Syntax error: Consecutive operators\n"), 1);
 	return (0);
 }
 

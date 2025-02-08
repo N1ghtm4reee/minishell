@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:41:40 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 16:46:11 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/08 18:22:19 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,6 @@ char	*ft_substr(char *s, int start, int len);
 char *ft_substr_malloc(char *s, int start, int len);
 char	*ft_strdup_malloc(const char *s);
 long long ft_atoi(char *str, int *error);
-
 // pids 
 
 t_pids *new_pid(pid_t pid_value);

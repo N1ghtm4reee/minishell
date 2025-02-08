@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:59:07 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 16:46:04 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/08 18:26:59 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,26 @@ size_t	ft_strlen(char *s)
 	return (i);
 }
 
-void	*ft_calloc(size_t count, size_t size)
+char	*ft_strdup_malloc(const char *s)
 {
-	char	*ptr;
+	int		len;
+	char	*d;
+	int		i;
 
-	if (!count || !size)
+	if (!s)
 		return (NULL);
-	if (size != 0 && size > (SIZE_MAX / count))
+	len = ft_strlen((char *)s);
+	d = malloc(sizeof(char) * (len + 1));
+	if (!d)
 		return (NULL);
-	ptr = malloc(count * size);
-	if (!ptr)
-		return (NULL);
-	return (ptr);
+	i = 0;
+	while (s[i])
+	{
+		d[i] = s[i];
+		i++;
+	}
+	d[i] = '\0';
+	return (d);
 }
 
 char	*ft_strdup(const char *s)
@@ -47,7 +55,7 @@ char	*ft_strdup(const char *s)
 	if (!s)
 		return (NULL);
 	len = ft_strlen((char *)s);
-	d = ft_calloc(sizeof(char) * (len + 1), 1);
+	d = gc_malloc(sizeof(char) * (len + 1));
 	if (!d)
 		return (NULL);
 	i = 0;
@@ -70,7 +78,7 @@ int ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-char	*ft_substr(char *s, int start, int len)
+char	*ft_substr_malloc(char *s, int start, int len)
 {
 	char			*sub;
 	int	i;
@@ -82,6 +90,30 @@ char	*ft_substr(char *s, int start, int len)
 	if (len > (ft_strlen(s) - start))
 		len = ft_strlen(s) - start;
 	sub = (char *)malloc(len + 1);
+	i = 0;
+	if (!sub)
+		return (NULL);
+	while (s[i + start] && i < len)
+	{	
+		sub[i] = s[i + start];
+		i++;
+	}
+	sub[i] = '\0';
+	return (sub);
+}
+
+char	*ft_substr(char *s, int start, int len)
+{
+	char			*sub;
+	int	i;
+
+	if (!s)
+		return (0);
+	if (start > ft_strlen(s))
+		return (ft_strdup(""));
+	if (len > (ft_strlen(s) - start))
+		len = ft_strlen(s) - start;
+	sub = (char *)gc_malloc(len + 1);
 	i = 0;
 	if (!sub)
 		return (NULL);
