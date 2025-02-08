@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:41:40 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 18:22:19 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 00:28:35 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,5 +355,17 @@ typedef struct s_expand_params
     char quote_char;
 }	t_expand_params;
 
+typedef struct s_quote_pos
+{
+    int	start;
+    int	end;
+}	t_quote_pos;
+
+typedef struct s_quote_data
+{
+    int inside;
+    int should_expand;
+    char quote_char;
+}   t_quote_data;
 
 #endif
