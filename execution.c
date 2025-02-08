@@ -293,7 +293,8 @@ void exceute_cmds(t_exec *executor)
                     pid = fork();
                     if (pid == 0)
                     {
-                        signal(SIGQUIT, handle_sigquit);
+                        signal(SIGQUIT, handle_sigquit_child);
+                        signal(SIGINT, handle_ctrlc);
                         if (pipes.prev_fd != -1)
                         {
                             dup2(pipes.prev_fd, STDIN_FILENO);
@@ -313,6 +314,7 @@ void exceute_cmds(t_exec *executor)
                     }
                     else if (pid > 0) 
                     {
+                        signal(SIGINT, SIG_IGN);
                         t_pids *new = new_pid(pid);
                         add_back_pid(&executor->pids, new);
                         // waitpid(pid, NULL, 0);
@@ -339,8 +341,7 @@ void exceute_cmds(t_exec *executor)
                 pid = fork();
                 if (pid == 0)
                 {
-                    signal(SIGQUIT, handle_sigquit);
-                    signal(SIGINT, handle_ctrlc);
+                    signal(SIGQUIT, handle_sigquit_child);
                     if (pipes.prev_fd != -1)
                     {
                         dup2(pipes.prev_fd, STDIN_FILENO);
@@ -359,6 +360,7 @@ void exceute_cmds(t_exec *executor)
                 }
                 else if (pid > 0)
                 {
+                    signal(SIGINT, SIG_IGN);
                     t_pids *new = new_pid(pid);
                     add_back_pid(&executor->pids, new);
                     if (pipes.prev_fd != -1)
@@ -382,6 +384,16 @@ void exceute_cmds(t_exec *executor)
         int status;
         waitpid(temp->pid, &status, 0);
         set_exit_status(WEXITSTATUS(status));
+        if (WIFSIGNALED(status))
+        {
+            if (WTERMSIG(status) ==  SIGQUIT)
+            {
+                write(2, "Quit (core dumped)\n", 19);
+                set_exit_status(131);
+            }
+            else if (WTERMSIG(status) == SIGINT)
+                set_exit_status(130);
+        }
         temp = temp->next;
     }
     dup2(saved_std_in, STDIN_FILENO);

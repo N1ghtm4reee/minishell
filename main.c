@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:42:23 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 17:14:42 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/08 17:36:19 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,15 @@ void handle_sigquit_child()
 
 void handle_ctrlc_child()
 {
-    //handle in here_doc
     t_sig *stats = sig_handler();
     int *sig_state = signal_state();
-    if (stats->reading_from_here_doc)
+    if (stats->reading_from_here_doc && !stats->executing)
     {
-        
+        write(1, "\n", 1);
         rl_on_new_line();
         rl_replace_line("", 0);
         stats->reading_from_here_doc = 0;
-        exit(1);
+        exit(130);
     }
 }
 
@@ -60,10 +59,18 @@ void handle_ctrlc()
 {
     t_sig *stats = sig_handler();
     int *sig_state = signal_state();
-    write(1, "\n", 1);
-    if (stats->executing == 0)
+
+    if (stats->executing == 0 && !stats->reading_from_here_doc)
     {
+        write(1, "\n", 1);
         rl_on_new_line();
+        rl_replace_line("", 0);
+        rl_redisplay();
+        set_exit_status(130);
+    }
+    else if (stats->executing == 1 && !stats->reading_from_here_doc)
+    {
+        write(1, "\n", 1);
         rl_replace_line("", 0);
         rl_redisplay();
         set_exit_status(130);
@@ -72,14 +79,7 @@ void handle_ctrlc()
 
 void handle_sigquit()
 {
-    t_sig *stats = sig_handler();
-    if (stats->executing)
-    {
-        write(2, "Quit (core dumped)\n", 19);
-        set_exit_status(131);
-    }
-    else
-        signal(SIGQUIT, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
 }
 
 void setup_signals()
@@ -104,11 +104,12 @@ int main(int ac, char **av, char **envp)
     executor.env = my_env;
     executor.pids = NULL;
     executor.last_pwd = NULL;
-    signal(SIGQUIT, SIG_IGN);
     t_sig *sig_state = sig_handler();
     while(1)
     {
+        signal(SIGINT, handle_ctrlc);
         sig_state->executing = 0;
+        signal(SIGQUIT, SIG_IGN);
         char *s = readline("minishell > ");
         if (!s)
         {
@@ -117,7 +118,7 @@ int main(int ac, char **av, char **envp)
         }
         add_history(s);
         if (simple_parsing(s, &executor) == 0)
-            // exceute_cmds(&executor);
+            exceute_cmds(&executor);
         free_all_in_gc();
         free(s);
     }
