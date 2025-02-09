@@ -128,10 +128,8 @@ int main(int ac, char **av, char **envp)
         }
         add_history(s);
         if (simple_parsing(s, &executor) == 0)
-        {
-            ;
-        }
-            // exceute_cmds(&executor);
+	       	 exceute_cmds(&executor);
+       
         free_all_in_gc();
         free(s);
     }
