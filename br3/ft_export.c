@@ -132,6 +132,7 @@ void change_var_value(t_env **my_env, char *str_name, char *str_value)
         temp = temp->next;
     }
 }
+
 void export_to_env(t_env **my_env, char *var)
 {
     int     indice;
@@ -141,9 +142,6 @@ void export_to_env(t_env **my_env, char *var)
 
     indice = equal_signe(var);
     str_name = ft_substr(var, 0, indice);
-    indice++;
-    while(var[indice] && var[indice] == ' ')
-        indice++;
     str_value = ft_substr(var, indice, ft_strlen(var) - indice);
     if(!str_name)
         return;
@@ -156,6 +154,7 @@ void export_to_env(t_env **my_env, char *var)
             add_back_env(my_env, new);
     }
 }
+
 int plus_signe_index(char *str)
 {
     int i;
@@ -164,6 +163,7 @@ int plus_signe_index(char *str)
         i++;
     return (i);
 }
+
 void change_var_value_special(t_env **my_env, char *str_name, char *str_value)
 {
     t_env *temp;

@@ -99,6 +99,7 @@ void init_executor(t_exec *executor, char **envp, t_env *my_env)
     executor->envp = envp;
     executor->path = NULL;
     executor->env = my_env;
+    executor->here_doc_oho = 0;
     executor->pids = NULL;
     executor->last_pwd = NULL; 
 }
@@ -155,6 +156,3 @@ int main(int ac, char **av, char **envp)
     // free_env (my_env);
     return (clear_history(), 0);
 }
-
-// 32  1
-// 5289 170
