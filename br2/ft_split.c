@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:56:58 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/04 21:33:52 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 01:10:22 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,6 @@ static int	ft_words(char *s, char c)
 	return (count);
 }
 
-static char	*ft_free(char **arr, int k)
-{
-	while (k > 0)
-		free(arr[--k]);
-	free(arr);
-	return (NULL);
-}
-
 static char	**ft_split2(char **arr, int i, char const *s, char c)
 {
 	int	r[2];
@@ -55,16 +47,11 @@ static char	**ft_split2(char **arr, int i, char const *s, char c)
 		{
 			r[0] = i;
 			while (s[i] && s[i] != c)
-			{
 				i++;
-			}
 			r[1] = i;
 			arr[j[0]] = gc_malloc(sizeof(char) * ((r[1] - r[0]) + 1));
 			if (arr[j[0]] == NULL)
-			{
-				ft_free(arr, j[0]);
 				return (NULL);
-			}
 			j[1] = 0;
 			while (r[0] < r[1])
 				arr[j[0]][j[1]++] = s[r[0]++];
@@ -72,7 +59,7 @@ static char	**ft_split2(char **arr, int i, char const *s, char c)
 			while (s[i] && s[i] == c)
 			{
 				if (s[i] == '"')
-					break;
+					break ;
 				i++;
 			}
 		}

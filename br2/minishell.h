@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:41:40 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 00:28:35 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 00:55:32 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,7 +294,6 @@ typedef struct norm
 typedef struct norm_dol
 {
     char c;
-    char *s;
     int i;
 }   t_n_dol;
 
@@ -322,7 +321,6 @@ typedef struct s_exp_env
     char        *new_str;
     t_quotes    quotes;
 }   t_exp;
-
 
 typedef struct s_exn
 {

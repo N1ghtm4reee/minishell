@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 04:56:49 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 00:03:36 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 01:00:36 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ void	process_dollars(char **command, int type)
 
 	ii = -1;
 	while (command[++ii])
-		command[ii] = handle_dollars(command[ii], type);
+	{
+		if (type != 55)
+			command[ii] = handle_dollars(command[ii], type);
+	}
 }
 
 t_list	*process_command_part(t_exec *executor, t_list *node, t_exn *var)

@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 18:14:28 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 00:33:59 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 00:37:32 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,38 +27,38 @@ void	init_array(t_quote_pos *arr, int size)
 
 int	process_quote(char *s, int i, t_quote_data *data)
 {
-    if (data->quote_char == '\'')
-        data->inside = 0;
-    else if (data->quote_char == '"')
-        data->inside = 1;
-    i++;
-    while (s[i] && s[i] != data->quote_char)
-    {
-        if (s[i] == '$' && data->inside == 1)
-            data->should_expand = 1;
-        i++;
-    }
-    return (i);
+	if (data->quote_char == '\'')
+		data->inside = 0;
+	else if (data->quote_char == '"')
+		data->inside = 1;
+	i++;
+	while (s[i] && s[i] != data->quote_char)
+	{
+		if (s[i] == '$' && data->inside == 1)
+			data->should_expand = 1;
+		i++;
+	}
+	return (i);
 }
 
 static void	handle_quote_case(char *s, t_quote_pos *arr, int *i, int *j)
 {
-    t_quote_data	data;
-    int				start;
-    int				end;
+	t_quote_data	data;
+	int				start;
+	int				end;
 
-    data.quote_char = s[*i];
-    data.inside = 0;
-    data.should_expand = 0;
-    start = *i;
-    *i = process_quote(s, *i, &data);
-    if (s[*i] == data.quote_char)
-    {
-        end = *i;
-        arr[*j].start = start;
-        arr[*j].end = end;
-        (*j)++;
-    }
+	data.quote_char = s[*i];
+	data.inside = 0;
+	data.should_expand = 0;
+	start = *i;
+	*i = process_quote(s, *i, &data);
+	if (s[*i] == data.quote_char)
+	{
+		end = *i;
+		arr[*j].start = start;
+		arr[*j].end = end;
+		(*j)++;
+	}
 }
 
 int	process_non_quote(char *s, int i)
