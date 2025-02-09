@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:42:23 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 02:47:20 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 03:49:46 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,8 +128,7 @@ int main(int ac, char **av, char **envp)
         }
         add_history(s);
         if (simple_parsing(s, &executor) == 0)
-	       	 exceute_cmds(&executor);
-       
+            exceute_cmds(&executor);
         free_all_in_gc();
         free(s);
     }

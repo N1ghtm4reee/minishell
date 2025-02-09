@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:41:40 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 02:40:00 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 13:06:39 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,9 @@ typedef struct sig_hand
 }   t_sig;
 
 void handle_sigquit_child();
-
+void set_here_doc_flag(int status);
+void *here_doc_flag();
+int has_quotes(char *s);
 // ls -la | wc -l > output_file
 
 // ls -la -> wc -l -> output_file
@@ -71,7 +73,6 @@ void handle_sigquit_child();
 
 typedef struct list
 {
-    int here_doc_quote;
     int type;//0 if word | 1 if pipe | 2 if red_inp | 3 if red_out_trunc | 4 if red_out_append | 5 if here_doc
     //55 type is the here_doc limiter
     //44 tyoe is the outfile name in append_mode
@@ -118,7 +119,7 @@ typedef struct s_pids
 
 typedef struct mini_exec
 {
-    int exit_status;
+    int here_doc_oho;
     int here_doc_fd;
     char **path;
     char **tokens;

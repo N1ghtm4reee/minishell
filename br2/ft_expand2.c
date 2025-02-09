@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 20:48:30 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 02:08:56 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 13:13:40 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool	is_dollar_expandable(char *s, int i, char quote_char)
 
 char	**handle_export_command(t_exec *executor, t_list *node, int *arr)
 {
-	char 	**n;
+	char	**n;
 	char	**new;
 	int		ij[2];
 

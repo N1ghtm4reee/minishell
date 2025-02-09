@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 22:10:48 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/07 15:16:28 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 13:08:15 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ t_list	*initialize_head(char ***commands)
 	head->type = check_type(commands[0][0]);
 	head->command = commands[0];
 	head->next = NULL;
-	head->here_doc_quote = 0;
 	return (head);
 }
 
@@ -46,7 +45,6 @@ t_list	*create_new_node(char **command, int previous_type)
 	new_node = gc_malloc(sizeof(t_list));
 	new_node->command = command;
 	new_node->next = NULL;
-	new_node->here_doc_quote = 0;
 	if (previous_type == 2)
 		new_node->type = 22;
 	else if (previous_type == 3)
@@ -54,7 +52,11 @@ t_list	*create_new_node(char **command, int previous_type)
 	else if (previous_type == 4)
 		new_node->type = 44;
 	else if (previous_type == 5)
+	{
 		new_node->type = 55;
+		if (has_quotes(command[0]))
+			set_here_doc_flag(1);
+	}
 	else
 		new_node->type = check_type(command[0]);
 	return (new_node);

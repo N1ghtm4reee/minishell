@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 05:40:41 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 02:48:21 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 13:12:48 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,9 @@ char	*expand_here_doc(char *s, t_exec *executor)
 	return (new_str);
 }
 
-int	process_here_doc_line(t_exec *executor, char *line,
-		char *limiter, int here_doc_quote)
+int	process_here_doc_line(t_exec *executor, char *line, char *limiter)
 {
-	if (!here_doc_quote)
+	if (!executor->here_doc_oho)
 	{
 		line = handle_dollars(line, 0);
 		line = expand_here_doc(line, executor);
@@ -77,8 +76,7 @@ int	process_here_doc_line(t_exec *executor, char *line,
 	return (1);
 }
 
-int	read_here_doc(t_exec *executor, char *limiter,
-		int counter, int here_doc_quote)
+int	read_here_doc(t_exec *executor, char *limiter, int counter)
 {
 	t_sig	*signal_stat;
 	char	*line;
@@ -94,7 +92,7 @@ int	read_here_doc(t_exec *executor, char *limiter,
 					counter, signal_stat));
 		if (ft_strcmp(line, limiter) == 0)
 			break ;
-		process_here_doc_line(executor, line, limiter, here_doc_quote);
+		process_here_doc_line(executor, line, limiter);
 		free(line);
 	}
 	free(line);
@@ -138,7 +136,7 @@ void	handle_here_doc(t_exec *executor)
 		{
 			counter++;
 			if (read_here_doc(executor, p->next->command[0],
-					counter, p->next->here_doc_quote))
+					counter))
 				counter = counter++;
 		}
 		p = p->next;

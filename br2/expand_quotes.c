@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 18:14:28 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 00:37:32 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 12:26:07 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,6 @@ char	*create_final_string(char *s, t_quote_pos *arr, t_list *p)
 	str = ft_strdup("");
 	while (arr[j].start != -2)
 	{
-		if (p->type == 55)
-			p->here_doc_quote = 1;
 		s1 = gc_malloc(sizeof(char) * (arr[j].end - arr[j].start + 1));
 		i = arr[j].start + 1;
 		k = 0;

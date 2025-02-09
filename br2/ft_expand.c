@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 04:56:49 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 01:00:36 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 13:14:46 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ t_list	*process_command(t_exec *executor, t_list *node)
 		if (ft_strcmp(node->command[0], "export"))
 			break ;
 	}
-	return (node);
+	// return (node);
+	return (result);
 }
 
 t_list	*expand(t_exec *executor, t_list *commands)

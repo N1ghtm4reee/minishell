@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:36:31 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 02:43:59 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 13:16:12 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,6 +230,8 @@ int	simple_parsing(char *s, t_exec *executor)
 	executor->commands = ft_split_tokens(executor->tokens);
 	executor->commands_list = parse_list(executor->commands);
 	executor->commands_list = expand(executor, executor->commands_list);
+	int *f = here_doc_flag();
+	executor->here_doc_oho = *f;
 	if (!executor->commands_list)
 		return (1);
 	stats->reading_from_here_doc = 1;
