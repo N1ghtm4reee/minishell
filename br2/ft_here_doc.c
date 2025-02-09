@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 05:40:41 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 02:34:21 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 02:48:21 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,9 @@ int	read_here_doc(t_exec *executor, char *limiter,
 		if (ft_strcmp(line, limiter) == 0)
 			break ;
 		process_here_doc_line(executor, line, limiter, here_doc_quote);
+		free(line);
 	}
+	free(line);
 	close(executor->here_doc_fd);
 	signal_stat->reading_from_here_doc = 0;
 	return (1);
