@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:36:31 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 01:55:19 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 02:25:14 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,15 +195,21 @@ int	count_words(char *s)
 
 int here_doc_wait(t_sig *stats, int status)
 {
-	set_exit_status(WEXITSTATUS(status));
 	stats->reading_from_here_doc = 0;
+
 	if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGINT)
 		{
-			set_exit_status(WEXITSTATUS(status));
+			set_exit_status(130);
 			return (1);
 		}
+	}
+	else if (WIFEXITED(status))
+	{
+		set_exit_status(WEXITSTATUS(status));
+		if (WEXITSTATUS(status) != 0)
+			return (1);
 	}
 	return (0);
 }
@@ -212,7 +218,7 @@ int	simple_parsing(char *s, t_exec *executor)
 {
 	t_sig	*stats;
 	char	*str;
-	int status;
+	int status = 0;
 
 	stats = sig_handler();
 	str = ft_strtrim(ft_strdup(s), " \t\n\r\n\f");
@@ -224,27 +230,15 @@ int	simple_parsing(char *s, t_exec *executor)
 	executor->commands = ft_split_tokens(executor->tokens);
 	executor->commands_list = parse_list(executor->commands);
 	executor->commands_list = expand(executor, executor->commands_list);
-	// int i;
-    // while(executor->commands_list)
-    // {
-    //     i = 0;
-    //     while(executor->commands_list->command[i])
-    //     {
-    //         printf("|%s|,", executor->commands_list->command[i++]);
-    //     }
-    //     printf("\n");
-    //     executor->commands_list = executor->commands_list->next;
-    // }
-	// if (!executor->commands_list)
-	// 	return (1);
-	// stats->reading_from_here_doc = 1;
-	// stats->pid = fork();
-	// if (!stats->pid)
-	// 	handle_here_doc(executor);
-	// else if (stats->pid > 0)
-	// 	waitpid(stats->pid, &status, 0);
-	// if (here_doc_wait(stats, status))
-	// 	return (1);
+	if (!executor->commands_list)
+		return (1);
+	stats->reading_from_here_doc = 1;
+	stats->pid = fork();
+	if (!stats->pid)
+		handle_here_doc(executor);
+	else if (stats->pid > 0)
+		return (waitpid(stats->pid, &status, 0)
+			, here_doc_wait(stats, status));
 	return (0);
 }
 
