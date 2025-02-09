@@ -412,4 +412,5 @@ void exceute_cmds(t_exec *executor)
     dup2(saved_std_out, STDOUT_FILENO);
     close(saved_std_in);
     close(saved_std_out);
+    unlink("here_doc");
 }

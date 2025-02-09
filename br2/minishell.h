@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:41:40 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 00:55:32 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 02:40:00 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,18 +123,13 @@ typedef struct mini_exec
     char **path;
     char **tokens;
     char ***commands;
-    // char **special_chars;
-    // int cmd_size;
     t_list *commands_list;
     t_env *env;
     t_pids *pids;
-    // char *command_path;
-    // char **full_command;
     char **envp;
     char *last_pwd;
     char *pwd;
     char *old_pwd;
-    // t_here_doc *here_docs;
     t_execution *exec;
 }   t_exec;
 
@@ -146,7 +141,6 @@ void *gc_malloc(size_t bytes);
 
 //parsing utils
 int	is_special(char c);
-
 
 //exit_status
 void *exit_status();
