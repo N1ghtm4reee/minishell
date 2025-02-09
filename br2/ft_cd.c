@@ -38,7 +38,7 @@ int ft_cd(char **argument, t_env **my_env, t_exec *executor)
     }
     new_pwd = getcwd(new_buff, 4096);
     if (new_pwd)
-        executor->last_pwd = ft_strdup(new_pwd);
+        executor->last_pwd = ft_strdup_malloc(new_pwd);
     if (!new_pwd)
         write(1, "failed to change to the directory\n", 35);
     if(old_pwd)

@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 20:48:30 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 00:03:53 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 02:08:56 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,30 @@ bool	is_dollar_expandable(char *s, int i, char quote_char)
 
 char	**handle_export_command(t_exec *executor, t_list *node, int *arr)
 {
+	char 	**n;
 	char	**new;
-	int		j;
+	int		ij[2];
 
 	new = expand_env(executor, node->command, arr, node->type);
-	if (!new)
-		return (NULL);
-	j = -1;
-	while (new[++j])
+	ij[1] = -1;
+	while (new && new[++ij[1]])
 	{
-		if (new[j] && new[j][0])
-			new[j] = expand_quotes(new[j], node);
+		if (new[ij[1]] && new[ij[1]][0])
+			new[ij[1]] = expand_quotes(new[ij[1]], node);
 	}
-	return (new);
+	n = gc_malloc(sizeof(char *) * (ij[1] + 1));
+	ij[1] = -1;
+	ij[0] = 0;
+	while (new && new[++ij[1]])
+	{
+		while (new && new[ij[1]] && !new[ij[1]][0])
+			ij[1]++;
+		if (!new[ij[1]])
+			break ;
+		n[ij[0]++] = new[ij[1]];
+	}
+	n[ij[0]] = NULL;
+	return (n);
 }
 
 t_list	*handle_export_special(t_exec *executor, t_list *node, int *arr)
