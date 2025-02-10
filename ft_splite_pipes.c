@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:48:40 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 02:11:21 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 10:51:16 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,45 +21,49 @@ void	skip_spaces(char *s, int *i)
 void	handle_non_operators(char *s, int *i, char **arr, int *k)
 {
 	int		st;
-	int		e;
-	int		j;
 	char	c;
 
 	st = *i;
 	while (s[*i] && s[*i] != '|' && s[*i] != '<' && s[*i] != '>')
 	{
-		c = s[*i];
-		if (c == '\"' || c == '\'')
+		if (s[*i] == '\"' || s[*i] == '\'')
 		{
+			c = s[*i];
 			(*i)++;
 			while (s[*i] && s[*i] != c)
 				(*i)++;
 			if (!s[*i])
+			{
+				(*i)--;
 				break ;
+			}
 		}
 		(*i)++;
 	}
-	e = *i;
-	arr[(*k)++] = ft_substr(s, st, e - st);
+	if (*i > st)
+		arr[(*k)++] = ft_substr(s, st, *i - st);
 }
 
 void	handle_double_operators(char *s, int *i, char **arr, int *k)
 {
-	if (s[*i] && s[*i + 1] && s[*i] == '>' && s[*i + 1] == '>')
+	if (s[*i] && s[*i + 1])
 	{
-		arr[(*k)++] = ft_strdup(">>");
-		*i += 2;
-	}
-	else if (s[*i] && s[*i + 1] && s[*i] == '<' && s[*i + 1] == '<')
-	{
-		arr[(*k)++] = ft_strdup("<<");
-		*i += 2;
+		if (s[*i] == '>' && s[*i + 1] == '>')
+		{
+			arr[(*k)++] = ft_strdup(">>");
+			*i += 2;
+		}
+		else if (s[*i] == '<' && s[*i + 1] == '<')
+		{
+			arr[(*k)++] = ft_strdup("<<");
+			*i += 2;
+		}
 	}
 }
 
 void	handle_single_operators(char *s, int *i, char **arr, int *k)
 {
-	if (s[*i] && (s[*i] == '|' || s[*i] == '>' || s[*i] == '<'))
+	if (s[*i])
 	{
 		if (s[*i] == '|')
 			arr[(*k)++] = ft_strdup("|");
@@ -82,14 +86,19 @@ char	**ft_split_pipes(char *s)
 	arr = gc_malloc(sizeof(char *) * (ft_strlen(s) + 1));
 	if (!arr)
 		return (NULL);
-	while (s[i] && k < ft_strlen(s))
+	while (s[i])
 	{
 		skip_spaces(s, &i);
 		if (!s[i])
 			break ;
-		handle_non_operators(s, &i, arr, &k);
-		handle_double_operators(s, &i, arr, &k);
-		handle_single_operators(s, &i, arr, &k);
+		if (s[i] != '|' && s[i] != '<' && s[i] != '>')
+			handle_non_operators(s, &i, arr, &k);
+		else if ((s[i] == '>' && s[i + 1] == '>') || (s[i] == '<'
+				&& s[i + 1] == '<'))
+			handle_double_operators(s, &i, arr, &k);
+		else
+			handle_single_operators(s, &i, arr, &k);
+		skip_spaces(s, &i);
 	}
 	arr[k] = NULL;
 	return (arr);

@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:56:58 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/04 21:33:52 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 03:01:12 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,75 @@ static int	ft_words(char *s, char c)
 	return (count);
 }
 
-static char	*ft_free(char **arr, int k)
+// static char	**ft_split2(char **arr, int i, char const *s, char c)
+// {
+// 	int	r[2];
+// 	int	j[2];
+
+// 	j[0] = 0;
+// 	if (!s[i])
+// 		arr[j[0]++] = ft_strdup(s);
+// 	else
+// 	{
+// 		while (s[i])
+// 		{
+// 			r[0] = i;
+// 			while (s[i] && s[i] != c)
+// 				i++;
+// 			r[1] = i;
+// 			arr[j[0]] = gc_malloc(sizeof(char) * ((r[1] - r[0]) + 1));
+// 			if (arr[j[0]] == NULL)
+// 				return (NULL);
+// 			j[1] = 0;
+// 			while (r[0] < r[1])
+// 				arr[j[0]][j[1]++] = s[r[0]++];
+// 			arr[j[0]++][j[1]] = '\0';
+// 			while (s[i] && s[i] == c)
+// 			{
+// 				if (s[i] == '"')
+// 					break ;
+// 				i++;
+// 			}
+// 		}
+// 	}
+// 	arr[j[0]] = 0;
+// 	return (arr);
+// }
+
+static char	**allocate_and_copy_substring(char **arr, int *j,
+		t_split_info *info)
 {
-	while (k > 0)
-		free(arr[--k]);
-	free(arr);
-	return (NULL);
+	int	k;
+
+	arr[*j] = gc_malloc(sizeof(char) * ((info->end - info->start) + 1));
+	if (arr[*j] == NULL)
+		return (NULL);
+	k = 0;
+	while (info->start < info->end)
+		arr[*j][k++] = info->str[info->start++];
+	arr[(*j)++][k] = '\0';
+	return (arr);
+}
+
+static void	skip_delimiters(char const *s, int *i, char c)
+{
+	while (s[*i] && s[*i] == c)
+	{
+		if (s[*i] == '"')
+			break ;
+		(*i)++;
+	}
 }
 
 static char	**ft_split2(char **arr, int i, char const *s, char c)
 {
-	int	r[2];
-	int	j[2];
+	int				r[2];
+	int				j[2];
+	t_split_info	info;
 
 	j[0] = 0;
+	j[1] = 0;
+	info.str = s;
 	if (!s[i])
 		arr[j[0]++] = ft_strdup(s);
 	else
@@ -55,41 +110,67 @@ static char	**ft_split2(char **arr, int i, char const *s, char c)
 		{
 			r[0] = i;
 			while (s[i] && s[i] != c)
-			{
 				i++;
-			}
 			r[1] = i;
-			arr[j[0]] = gc_malloc(sizeof(char) * ((r[1] - r[0]) + 1));
-			if (arr[j[0]] == NULL)
-			{
-				ft_free(arr, j[0]);
+			info.start = r[0];
+			info.end = r[1];
+			if (!allocate_and_copy_substring(arr, &j[0], &info))
 				return (NULL);
-			}
-			j[1] = 0;
-			while (r[0] < r[1])
-				arr[j[0]][j[1]++] = s[r[0]++];
-			arr[j[0]++][j[1]] = '\0';
-			while (s[i] && s[i] == c)
-			{
-				if (s[i] == '"')
-					break;
-				i++;
-			}
+			skip_delimiters(s, &i, c);
 		}
-		
 	}
-	arr[j[0]] = 0;
-	return (arr);
+	return (arr[j[0]] = 0, arr);
 }
+
+// static char	**allocate_and_copy_substring(char **arr, int *j, char const *s,
+// 		int start, int end)
+// {
+// 	int	k;
+
+// 	arr[*j] = gc_malloc(sizeof(char) * ((end - start) + 1));
+// 	if (arr[*j] == NULL)
+// 		return (NULL);
+// 	k = 0;
+// 	while (start < end)
+// 		arr[*j][k++] = s[start++];
+// 	arr[(*j)++][k] = '\0';
+// 	return (arr);
+// }
+// static char	**ft_split2(char **arr, int i, char const *s, char c)
+// {
+// 	int	r[2];
+// 	int	j[2];
+
+// 	j[0] = 0;
+// 	j[1] = 0;
+// 	if (!s[i])
+// 		arr[j[0]++] = ft_strdup(s);
+// 	else
+// 	{
+// 		while (s[i])
+// 		{
+// 			r[0] = i;
+// 			while (s[i] && s[i] != c)
+// 				i++;
+// 			r[1] = i;
+// 			if (!allocate_and_copy_substring(arr, &j[0], s, r[0], r[1]))
+// 				return (NULL);
+// 			skip_delimiters(s, &i, c);
+// 		}
+// 	}
+// 	arr[j[0]] = 0;
+// 	return (arr);
+// }
 
 char	**ft_split(char const *s, char c)
 {
 	int		i;
 	char	**d;
+	int		count;
 
 	i = 0;
-	int count = ft_words((char *)s, c);
-	while(s[i] && s[i] == c)
+	count = ft_words((char *)s, c);
+	while (s[i] && s[i] == c)
 		i++;
 	if (!s)
 		return (NULL);

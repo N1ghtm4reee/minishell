@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 19:03:20 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 10:57:05 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 11:46:30 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,11 @@ char	*process_dollar(t_expand_params *params)
 {
 	if (params->s[*(params->i) + 1] && params->s[*(params->i) + 1] == '?')
 		return (handle_exit_status_exp(params->i));
-	else if (params->s[*(params->i) + 1] && ft_isdigit(params->s[*(params->i) + 1]))
+	else if (params->s[*(params->i) + 1]
+		&& ft_isdigit(params->s[*(params->i) + 1]))
 		return (handle_digit(params));
-	else if (params->s[*(params->i) + 1] && ft_isalpha(params->s[*(params->i) + 1])
+	else if ((params->s[*(params->i) + 1]
+		&& ft_isalpha(params->s[*(params->i) + 1]))
 		|| params->s[*(params->i) + 1] == '_')
 		return (handle_alpha_underscore(params));
 	(*(params->i))++;
@@ -69,7 +71,6 @@ char	*expand_env_export(t_exec *executor, char *s, int *arr, int type)
 {
 	int				i;
 	char			*new_str;
-	char			*old_str;
 	char			*temp;
 	t_expand_params	params;
 
@@ -80,15 +81,13 @@ char	*expand_env_export(t_exec *executor, char *s, int *arr, int type)
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] == '$' && (!params.quote_char || params.quote_char == '"')
-			&& check_if_limiter(s, i))
+		if (s[i] == '$' && (!params.quote_char || params.quote_char == '"'))
 		{
 			params.counter++;
 			temp = process_dollar(&params);
 		}
 		else
 			temp = process_char(&params);
-		old_str = new_str;
 		new_str = ft_strjoin1(new_str, temp);
 	}
 	return (new_str);

@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:49:19 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 16:39:36 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/09 02:42:24 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,6 @@ int	handle_here_doc_error(t_exec *executor, char *limiter,
 void	here_doc_max_error(void)
 {
 	ft_printf(2, "to many here_docs\n");
-	set_exit_status(2); //should remove?
+	set_exit_status(2);
 	exit(2);
 }

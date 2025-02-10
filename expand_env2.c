@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 23:10:43 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 15:12:36 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 11:34:48 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,88 +75,10 @@ static void	split_and_store(char *joined, t_exp *var)
 	var->result_size--;
 }
 
-// int handle_env_var(t_exp *var, int *i, char quote_char)
-// {
-//     char *word = NULL;
-//     char *append = NULL;
-//     char *tmp = NULL;
-    
-//     if (!quote_char || quote_char == '"')
-//     {
-//         (*i)++;
-//         // If we're at the end of the string after incrementing i
-//         if (!var->s[*i])
-//         {
-//             append = append_str('$');
-//             if (!append)
-//                 return (0);
-//             tmp = ft_strjoin1(var->new_str, append);
-//             free(append);
-//             if (!tmp)
-//                 return (0);
-//             free(var->new_str);
-//             var->new_str = tmp;
-//             return (1);
-//         }
-        
-//         word = get_env_variable(var->executor, var->s, *i, i);
-        
-//         // Handle ambiguous redirect case
-//         if (!word && var->type != 0 && var->type != 55)
-//         {
-//             ft_printf(2, var->s);
-//             ft_printf(2, ": ambiguous redirect\n");
-//             set_exit_status(1);
-//             return (0);
-//         }
-        
-//         // Handle valid word case
-//         if (word)
-//         {
-//             char *joined = join_word(word, var);
-//             if (!joined)
-//             {
-//                 free(word);
-//                 return (0);
-//             }
-//             split_and_store(joined, var);
-//             free(word);
-//         }
-//         // Handle NULL word case
-//         else if (var->s[*i])  // Make sure we're not at end of string
-//         {
-//             append = append_str(var->s[*i]);
-//             if (!append)
-//                 return (0);
-//             tmp = ft_strjoin1(var->new_str, append);
-//             free(append);
-//             if (!tmp)
-//                 return (0);
-//             free(var->new_str);
-//             var->new_str = tmp;
-//             (*i)++;
-//         }
-//     }
-//     else
-//     {
-//         append = append_str(var->s[*i]);
-//         if (!append)
-//             return (0);
-//         tmp = ft_strjoin1(var->new_str, append);
-//         free(append);
-//         if (!tmp)
-//             return (0);
-//         free(var->new_str);
-//         var->new_str = tmp;
-//         (*i)++;
-//     }
-//     return (1);
-// }
-
 int	handle_env_var(t_exp *var, int *i, char quote_char)
 {
-	char	*word = NULL;
-	char	*joined = NULL;
+	char	*word;
+	// char	*joined;
 
 	if (!quote_char || quote_char == '"')
 	{

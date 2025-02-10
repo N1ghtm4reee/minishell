@@ -1,49 +1,69 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/05 17:57:28 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 18:25:04 by aakhrif          ###   ########.fr       */
+/*   Created: 2025/02/10 01:51:50 by aakhrif           #+#    #+#             */
+/*   Updated: 2025/02/10 11:44:29 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_strlen1(char *s)
+int	ft_strlen(char *s)
 {
 	int	i;
 
 	i = 0;
+	if (!s)
+		return (0);
 	while (s[i])
 		i++;
-	return (0);
+	return (i);
 }
 
-char	*ft_strjoin1(char *s1, char *s2)
+char	*ft_strdup_malloc(const char *s)
 {
-	int		i;
+	int		len;
 	char	*d;
-	int		j;
+	int		i;
 
-	i = 0;
-	j = 0;
-	if (!s1)
-		s1 = ft_strdup("");
-	d = gc_malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!s)
+		return (NULL);
+	len = ft_strlen((char *)s);
+	d = gc_malloc(sizeof(char) * (len + 1));
 	if (!d)
 		return (NULL);
-	if (s1)
-		while (s1[i])
-			d[j++] = s1[i++];
-	j = 0;
-	while (s2[j])
+	i = 0;
+	while (s[i])
 	{
-		d[i + j] = s2[j];
-		j++;
+		d[i] = s[i];
+		i++;
 	}
-	d[i + j] = '\0';
+	d[i] = '\0';
+	return (d);
+}
+
+char	*ft_strdup(const char *s)
+{
+	int		len;
+	char	*d;
+	int		i;
+
+	if (!s)
+		return (NULL);
+	len = ft_strlen((char *)s);
+	d = gc_malloc(sizeof(char) * (len + 1));
+	if (!d)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		d[i] = s[i];
+		i++;
+	}
+	d[i] = '\0';
 	return (d);
 }

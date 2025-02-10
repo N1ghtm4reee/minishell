@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 23:17:07 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 16:47:29 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/08 23:58:33 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 char	**init_result(void)
 {
-	char	**result = NULL;
+	char	**result;
+	int		i;
 
 	result = gc_malloc(sizeof(char *) * 1024);
-	int i = 0;
-	while(i < 1024)
+	i = 0;
+	while (i < 1024)
 		result[i++] = ft_strdup("");
 	return (result);
 }

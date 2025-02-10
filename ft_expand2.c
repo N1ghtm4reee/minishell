@@ -6,45 +6,55 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 20:48:30 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 16:51:27 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 12:42:12 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	is_dollar_expandable(char *s, int i, char quote_char)
+bool	is_dollar_expandable(char quote_char)
 {
-	return ((!quote_char || quote_char == '"') && check_if_limiter(s, i));
+	return ((!quote_char || quote_char == '"'));
 }
 
-char	**handle_export_command(t_exec *executor, t_list *node, int *arr)
+char	**handle_export_command(t_exec *executor, t_list *node)
 {
+	char	**n;
 	char	**new;
-	int		j;
+	int		ij[2];
 
-	new = expand_env(executor, node->command, arr, node->type);
-	if (!new)
-		return (NULL);
-	j = -1;
-	while (new[++j])
+	new = expand_env(executor, node->command, node->type);
+	ij[1] = -1;
+	while (new && new[++ij[1]])
 	{
-		// 	return (NULL);
-		if (new[j] && new[j][0]) // if i want to fix ls $kasgf here to edit
-			new[j] = expand_quotes(new[j], node);
+		if (new[ij[1]] && new[ij[1]][0])
+			new[ij[1]] = expand_quotes(new[ij[1]]);
 	}
-	return (new);
+	n = gc_malloc(sizeof(char *) * (ij[1] + 1));
+	ij[1] = -1;
+	ij[0] = 0;
+	while (new && new[++ij[1]])
+	{
+		while (!node->type && new && new[ij[1]] && !new[ij[1]][0])
+			ij[1]++;
+		if (!new[ij[1]])
+			break ;
+		n[ij[0]++] = new[ij[1]];
+	}
+	n[ij[0]] = NULL;
+	return (n);
 }
 
-t_list	*handle_export_special(t_exec *executor, t_list *node, int *arr)
+t_list	*handle_export_special(t_exec *executor, t_list *node)
 {
 	char	**new;
 
-	new = handle_export_command(executor, node, arr);
+	new = handle_export_command(executor, node);
 	node->command = new;
 	return (node);
 }
 
-char	*expand_quotes_exp(char *expanded, t_list *node)
+char	*expand_quotes_exp(char *expanded)
 {
 	char	*arg;
 	int		i;
@@ -78,7 +88,7 @@ void	handle_regular_command(t_exec *executor, t_list *node, int i, int *arr)
 
 	expanded = expand_env_export(executor, node->command[i], arr, node->type);
 	if (i == 0)
-		node->command[i] = expand_quotes(expanded, node);
+		node->command[i] = expand_quotes(expanded);
 	else
-		node->command[i] = expand_quotes_exp(expanded, node);
+		node->command[i] = expand_quotes_exp(expanded);
 }

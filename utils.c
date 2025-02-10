@@ -6,106 +6,28 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:59:07 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 18:26:59 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 11:45:52 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-size_t	ft_strlen(char *s)
+int	ft_strcmp(char *s1, char *s2)
 {
-	size_t	i;
+	int	i;
 
-	i = 0;
-	if (!s)
-		return (0);
-	while (s[i])
-		i++;
-	return (i);
-}
-
-char	*ft_strdup_malloc(const char *s)
-{
-	int		len;
-	char	*d;
-	int		i;
-
-	if (!s)
-		return (NULL);
-	len = ft_strlen((char *)s);
-	d = malloc(sizeof(char) * (len + 1));
-	if (!d)
-		return (NULL);
-	i = 0;
-	while (s[i])
-	{
-		d[i] = s[i];
-		i++;
-	}
-	d[i] = '\0';
-	return (d);
-}
-
-char	*ft_strdup(const char *s)
-{
-	int		len;
-	char	*d;
-	int		i;
-
-	if (!s)
-		return (NULL);
-	len = ft_strlen((char *)s);
-	d = gc_malloc(sizeof(char) * (len + 1));
-	if (!d)
-		return (NULL);
-	i = 0;
-	while (s[i])
-	{
-		d[i] = s[i];
-		i++;
-	}
-	d[i] = '\0';
-	return (d);
-}
-
-int ft_strcmp(char *s1, char *s2)
-{
 	if (!s1 || !s2)
 		return (1);
-	int i = 0;
-	while(s1[i] && (s1[i] == s2[i]))
+	i = 0;
+	while (s1[i] && s2[i] && (s1[i] == s2[i]))
 		i++;
 	return (s1[i] - s2[i]);
 }
 
 char	*ft_substr_malloc(char *s, int start, int len)
 {
-	char			*sub;
-	int	i;
-
-	if (!s)
-		return (0);
-	if (start > ft_strlen(s))
-		return (ft_strdup(""));
-	if (len > (ft_strlen(s) - start))
-		len = ft_strlen(s) - start;
-	sub = (char *)malloc(len + 1);
-	i = 0;
-	if (!sub)
-		return (NULL);
-	while (s[i + start] && i < len)
-	{	
-		sub[i] = s[i + start];
-		i++;
-	}
-	sub[i] = '\0';
-	return (sub);
-}
-
-char	*ft_substr(char *s, int start, int len)
-{
-	char			*sub;
-	int	i;
+	char	*sub;
+	int		i;
 
 	if (!s)
 		return (0);
@@ -118,7 +40,7 @@ char	*ft_substr(char *s, int start, int len)
 	if (!sub)
 		return (NULL);
 	while (s[i + start] && i < len)
-	{	
+	{
 		sub[i] = s[i + start];
 		i++;
 	}
@@ -126,69 +48,59 @@ char	*ft_substr(char *s, int start, int len)
 	return (sub);
 }
 
-long long ft_atoi(char *str, int *error)
+char	*ft_substr(char *s, int start, int len)
 {
-	int	i;
-	int	signe;
-	long long res;
+	char	*sub;
+	int		i;
+
+	if (!s)
+		return (0);
+	if (start > ft_strlen(s))
+		return (ft_strdup(""));
+	if (len > (ft_strlen(s) - start))
+		len = ft_strlen(s) - start;
+	sub = (char *)gc_malloc(len + 1);
+	i = 0;
+	if (!sub)
+		return (NULL);
+	while (s[i + start] && i < len)
+	{
+		sub[i] = s[i + start];
+		i++;
+	}
+	sub[i] = '\0';
+	return (sub);
+}
+
+int	get_sign(char c)
+{
+	if (c == '-')
+		return (-1);
+	return (1);
+}
+
+long long	ft_atoi(char *str, int *error)
+{
+	int			i;
+	int			signe;
+	long long	res;
+	int			start;
 
 	i = 0;
 	signe = 1;
 	res = 0;
 	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
 		i++;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-			signe = -1;
+	signe = get_sign(str[i++]);
+	while (str[i] == '0')
 		i++;
-	}
-    while(str[i] == '0')
-        i++;
-    int start = 0;
+	start = 0;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		res = res * 10 + (str[i] - '0');
-		i++;
-        start++;
+		res = res * 10 + (str[i++] - '0');
+		start++;
 	}
-    if (start >= 20 || res*signe > LONG_MAX || res*signe < LONG_MIN)
-        *error = 1;
+	if (start >= 20 || res * signe > LONG_MAX || res * signe < LONG_MIN)
+		*error = 1;
 	return (signe * res);
-}
-
-int	ft_isalpha(int c)
-{	
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
-		return (1);
-	return (0);
-}
-
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
-
-int	ft_isalnum(int c)
-{
-	if (ft_isalpha(c) == 1 || ft_isdigit(c) == 1)
-		return (1);
-	return (0);
-}
-
-char *append_str(char c)
-{
-	char *s = gc_malloc(sizeof(char) * 2);
-	s[0] = c;
-	s[1] = '\0';
-	return s;
-}
-
-int ft_isspace(char c)
-{
-	if (c == ' ' || c == '\t' || c == '\v' || c == '\n' || c == '\f')
-		return 1;
-	return 0;
 }

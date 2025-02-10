@@ -1,49 +1,70 @@
-# include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/09 22:10:18 by mlouati           #+#    #+#             */
+/*   Updated: 2025/02/09 22:24:10 by mlouati          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int ft_cd(char **argument, t_env **my_env, t_exec *executor)
+#include "minishell.h"
+
+int	change_directory(char *dir)
 {
-    int ac;
-    char old_buff[4096];
-    char new_buff[4096];
-    char *old_pwd;
-    char *new_pwd;
+	if (chdir(dir) == -1)
+	{
+		perror("failed to change to the directory\n");
+		return (1);
+	}
+	return (0);
+}
 
-    ac = 0;
-    old_pwd = getcwd(old_buff, 4096);
-    while(argument[ac])
-        ac++;
-    if( ac > 2)
-    {
-        write(1, "bash : cd : too many arguments\n", 31);
-        return 1;
-    }
-    else
-    {
-        if(ac == 1 || (ac == 2 && !ft_strcmp(argument[1], "~")))
-        {
-            if (chdir(get_env_value(*my_env,"HOME")) == -1)
-            {
-                perror(" failed to change to home directory");
-                return 1;
-            }
-        }
-        else
-        {
-            if (chdir(argument[1]) == -1)
-            {
-                perror(" failed to change to the directory");
-                return 1;
-            }
-        }
-    }
-    new_pwd = getcwd(new_buff, 4096);
-    if (new_pwd)
-        executor->last_pwd = ft_strdup(new_pwd);
-    if (!new_pwd)
-        write(1, "failed to change to the directory\n", 35);
-    if(old_pwd)
-        change_var_value(my_env, "OLDPWD", old_pwd);
-    if(new_pwd)
-        change_var_value(my_env, "PWD", new_pwd);
-    return 0;
+int	cd_validate_and_change(char **argument, t_env **my_env)
+{
+	int	ac;
+
+	ac = 0;
+	while (argument[ac])
+		ac++;
+	if (ac > 2)
+	{
+		write(2, "bash : cd : too many arguments\n", 31);
+		return (1);
+	}
+	if (ac == 1 || (ac == 2 && !ft_strcmp(argument[1], "~")))
+		return (change_directory(get_env_value(*my_env, "HOME")));
+	else
+		return (change_directory(argument[1]));
+}
+
+void	update_pwd_variables(t_env **my_env, char *old_pwd, char *new_pwd)
+{
+	if (old_pwd)
+		change_var_value(my_env, "OLDPWD", old_pwd);
+	if (new_pwd)
+		change_var_value(my_env, "PWD", new_pwd);
+}
+
+int	ft_cd(char **argument, t_env **my_env, t_exec *executor)
+{
+	char	old_buff[4096];
+	char	new_buff[4096];
+	char	*old_pwd;
+	char	*new_pwd;
+
+	old_pwd = getcwd(old_buff, 4096);
+	if (cd_validate_and_change(argument, my_env))
+		return (1);
+	new_pwd = getcwd(new_buff, 4096);
+	if (new_pwd)
+	{
+		executor->last_pwd = ft_strdup_malloc(new_pwd);
+		update_pwd_variables(my_env, old_pwd, new_pwd);
+	}
+	else
+		write(2, "failed to change to the directory\n", 35);
+	return (0);
 }

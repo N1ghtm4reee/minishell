@@ -52,7 +52,7 @@ static int	t_length(const char *s, const char *set, int *ss, int *e)
 
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	char	*d = NULL;
+	char	*d ;
 	int		start;
 	int		end;
 	int		t_len;
@@ -60,6 +60,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 
 	start = 0;
 	end = 0;
+	d = NULL;
 	if (!set || !s1)
 		return (NULL);
 	t_len = t_length(s1, set, &start, &end) + 1;

@@ -50,7 +50,7 @@ char	*ft_itoa(int n)
 		len++;
 		n /= 10;
 	}
-	d = malloc(sizeof(char) * (len + 1));
+	d = gc_malloc(sizeof(char) * (len + 1));
 	if (!d)
 		return (NULL);
 	d = ft_itoa2(d, len, nb);

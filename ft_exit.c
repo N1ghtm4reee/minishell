@@ -1,50 +1,64 @@
-# include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/09 03:31:40 by mlouati           #+#    #+#             */
+/*   Updated: 2025/02/09 22:06:52 by mlouati          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int ft_is_number(char *str)
+#include "minishell.h"
+
+int	ft_is_number(char *str)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    if(str[i] == '+' || str[i] == '-')
-        i++;
-    if(str[i] == '\0')
-        return (0);
-    while(str[i])
-    {
-        if (str[i] < '0' || str[i] > '9')
-            return(0);
-        i++;
-    }
-    return(1);
+	i = 0;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	if (str[i] == '\0')
+		return (0);
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
-void ft_exit(char **argument)
+void	numeric_error(char *str)
 {
-    if(!argument[1])
-    {
-        set_exit_status(0);
-        exit(0);
-    }
-    if (argument[1] && !ft_is_number(argument[1]))
-    {
-        printf("bash : exit: %s: numeric argument required\n",argument[1]);
-        set_exit_status(2);
-        exit(2);
-    }
-    int error = 0;
-    long long num = ft_atoi(argument[1], &error);
-    if (error)
-    {
-        printf("bash : exit: %s: numeric argument required\n",argument[1]);
-        set_exit_status(2);
-        exit(2);
-    }
-    if(argument[2])
-    {
-        printf("bash: exit: too many arguments\n");
-        set_exit_status(1);
-        return;
-    }
-    set_exit_status(num % 256);
-    exit(num % 256);
+	printf("bash : exit: %s: numeric argument required\n", str);
+	set_exit_status(2);
+	exit(2);
+}
+
+void	ft_exit(char **argument)
+{
+	int			error;
+	long long	num;
+
+	if (!argument[1])
+	{
+		set_exit_status(0);
+		exit(0);
+	}
+	if (argument[1] && !ft_is_number(argument[1]))
+		numeric_error(argument[1]);
+	error = 0;
+	num = ft_atoi(argument[1], &error);
+	if (error)
+		numeric_error(argument[1]);
+	if (argument[2])
+	{
+		printf("bash: exit: too many arguments\n");
+		set_exit_status(1);
+		return ;
+	}
+	set_exit_status(num % 256);
+	exit(num % 256);
 }

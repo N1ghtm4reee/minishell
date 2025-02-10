@@ -6,206 +6,100 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 18:14:28 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 16:40:10 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 12:38:58 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// char *expand_quotes(char *s, t_list *p)
-// {
-//     int size = ft_strlen(s);
-//     int i = 0;
-//     char c = -2;
-//     int j = 0;
-//     int start = -1;
-//     int end = -1;
-//     int found = -1;
-//     int arr[100][2];
-//     int should_expand = 0;
-//     while(i < 100)
-//     {
-//         arr[i][0] = -2;
-//         arr[i][1] = -2;
-//         i++;
-//     }
-//     i = 0;
-//     int prev_i = -1;
-//     int inside = 0;
-//     while (s[i])
-//     {
-//         found = 0;
-//         if (s[i] == '\'' || s[i] == '"') 
-//         {
-//             c = s[i];
-//             if (c == '\'')
-//                 inside = 0;
-//             else if (c == '"')
-//                 inside = 1;
-//             start = i;
-//             i++;
-//             while (s[i] && s[i] != c)
-//             {
-//                 if (s[i] == '$' && inside == 1)
-//                     should_expand = 1;
-//                 i++;
-//             }
-//             if (s[i] == c)
-//             {
-//                 end = i;
-//                 arr[j][0] = start;
-//                 arr[j][1] = end;
-//                 j++;
-//             }
-//         }
-//         else
-//         {
-//             if (i > 0)
-//             {
-//                 if (s[i - 1] && s[i - 1] == '\'' || s[i - 1] == '"')
-//                     start = i - 1;
-//             }
-//             while(s[i] && (s[i] != '\'' && s[i] != '"'))
-//                 i++;
-//             end = i;
-//             arr[j][0] = start;
-//             arr[j][1] = end;
-//             j++;
-//             found = 1;
-//         }
-//         if (!found)
-//             i++;
-//     }
-//     i = 0;
-//     j = 0;
-//     char *str = ft_strdup("");
-//     while(arr[j][0] != -2)
-//     {
-//         if (p->type == 55)
-//             p->here_doc_quote = 1;
-//         char *s1 = gc_malloc(sizeof(char) * (arr[j][1] - arr[j][0] + 1));
-//         i = arr[j][0] + 1;
-//         int k = 0;
-//         while(i < arr[j][1])
-//         {
-//             s1[k++] = s[i++];
-//         }
-//         s1[k] = '\0';
-//         str = ft_strjoin1(str, s1);
-//         j++;
-//     }
-//     if (arr[0][0] == -2)
-//         return s;
-//     return str;
-// }
-
-void init_array(int arr[100][2])
+void	init_array(t_quote_pos *arr, int size)
 {
-    int i = 0;
-    while (i < 100)
-    {
-        arr[i][0] = -2;
-        arr[i][1] = -2;
-        i++;
-    }
+	int	i;
+
+	i = 0;
+	while (i < size)
+	{
+		arr[i].start = -2;
+		arr[i].end = -2;
+		i++;
+	}
 }
 
-int process_quote(char *s, int i, char c, int *inside, int *should_expand)
+int	process_quote(char *s, int i, t_quote_data *data)
 {
-    if (c == '\'')
-        *inside = 0;
-    else if (c == '"')
-        *inside = 1;
-    i++;
-    while (s[i] && s[i] != c)
-    {
-        if (s[i] == '$' && *inside == 1)
-            *should_expand = 1;
-        i++;
-    }
-    return i;
+	if (data->quote_char == '\'')
+		data->inside = 0;
+	else if (data->quote_char == '"')
+		data->inside = 1;
+	i++;
+	while (s[i] && s[i] != data->quote_char)
+	{
+		if (s[i] == '$' && data->inside == 1)
+			data->should_expand = 1;
+		i++;
+	}
+	return (i);
 }
 
-int process_non_quote(char *s, int i)
+void	handle_quote_case(char *s, t_quote_pos *arr, int *i, int *j)
 {
-    while(s[i] && (s[i] != '\'' && s[i] != '"'))
-        i++;
-    return i;
+	t_quote_data	data;
+	int				start;
+	int				end;
+
+	data.quote_char = s[*i];
+	data.inside = 0;
+	data.should_expand = 0;
+	start = *i;
+	*i = process_quote(s, *i, &data);
+	if (s[*i] == data.quote_char)
+	{
+		end = *i;
+		arr[*j].start = start;
+		arr[*j].end = end;
+		(*j)++;
+	}
 }
 
-void find_quote_positions(char *s, int arr[100][2])
+char	*create_final_string(char *s, t_quote_pos *arr)
 {
-    int i = 0;
-    int j = 0;
-    int start = -1;
-    int end = -1;
-    int inside = 0;
-    int should_expand = 0;
-    char c;
-    
-    while (s[i])
-    {
-        int found = 0;
-        if (s[i] == '\'' || s[i] == '"')
-        {
-            c = s[i];
-            start = i;
-            i = process_quote(s, i, c, &inside, &should_expand);
-            if (s[i] == c)
-            {
-                end = i;
-                arr[j][0] = start;
-                arr[j][1] = end;
-                j++;
-            }
-        }
-        else
-        {
-            if ((i > 0 && s[i - 1]) &&  ((s[i - 1] == '\'' || s[i - 1] == '"')))
-                start = i - 1;
-            i = process_non_quote(s, i);
-            end = i;
-            arr[j][0] = start;
-            arr[j][1] = end;
-            j++;
-            found = 1;
-        }
-        if (!found)
-            i++;
-    }
+	int		i;
+	int		k;
+	int		j;
+	char	*str;
+	char	*s1;
+
+	i = 0;
+	j = 0;
+	str = ft_strdup("");
+	while (arr[j].start != -2)
+	{
+		s1 = gc_malloc(sizeof(char) * (arr[j].end - arr[j].start + 1));
+		i = arr[j].start + 1;
+		k = 0;
+		while (i < arr[j].end)
+			s1[k++] = s[i++];
+		s1[k] = '\0';
+		str = ft_strjoin1(str, s1);
+		j++;
+	}
+	return (str);
 }
 
-char *create_final_string(char *s, int arr[100][2], t_list *p)
+char	*expand_quotes(char *s)
 {
-    int i = 0;
-    int j = 0;
-    char *str = ft_strdup("");
-    
-    while(arr[j][0] != -2)
-    {
-        if (p->type == 55)
-            p->here_doc_quote = 1;
-        char *s1 = gc_malloc(sizeof(char) * (arr[j][1] - arr[j][0] + 1));
-        i = arr[j][0] + 1;
-        int k = 0;
-        while(i < arr[j][1])
-            s1[k++] = s[i++];
-        s1[k] = '\0';
-        str = ft_strjoin1(str, s1);
-        j++;
-    }
-    return str;
-}
+	t_quote_pos	*arr;
+	char		*result;
+	int			size;
 
-char *expand_quotes(char *s, t_list *p)
-{
-    int arr[100][2];
-    
-    init_array(arr);
-    find_quote_positions(s, arr);
-    
-    if (arr[0][0] == -2)
-        return s;
-        
-    return create_final_string(s, arr, p);
+	size = ft_strlen(s) + 1;
+	arr = gc_malloc(sizeof(t_quote_pos) * size);
+	if (!arr)
+		return (s);
+	init_array(arr, size);
+	find_quote_positions(s, arr);
+	if (arr[0].start == -2)
+		return (s);
+	result = create_final_string(s, arr);
+	return (result);
 }
