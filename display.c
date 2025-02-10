@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:49:19 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 02:42:24 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 15:07:07 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ void	ft_printf(int fd, char *s)
 int	handle_here_doc_error(t_exec *executor, char *limiter,
 		int counter, t_sig *signal_stat)
 {
-	printf(HERE_DOC_MSG1);
+	ft_printf(2, HERE_DOC_MSG1);
 	printf("%d", counter);
-	printf(HERE_DOC_MSG2);
+	ft_printf(2, HERE_DOC_MSG2);
 	printf("%s", limiter);
-	printf(HERE_DOC_MSG3);
+	ft_printf(2, HERE_DOC_MSG3);
 	close(executor->here_doc_fd);
 	signal_stat->reading_from_here_doc = 0;
 	return (0);

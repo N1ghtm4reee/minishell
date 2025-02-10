@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:59:07 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 11:45:52 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 14:56:14 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ long long	ft_atoi(char *str, int *error)
 	res = 0;
 	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
 		i++;
-	signe = get_sign(str[i++]);
+	if (str[i] == '+' || str[i] == '-')
+		signe = get_sign(str[i++]);
 	while (str[i] == '0')
 		i++;
 	start = 0;

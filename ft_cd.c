@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 22:10:18 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/10 14:03:19 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 14:49:57 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,31 @@ int	cd_validate_and_change(char **argument, t_env **my_env)
 void	update_pwd_variables(t_env **my_env, char *old_pwd, char *new_pwd)
 {
 	if (old_pwd)
-		change_var_value(my_env, "OLDPWD", old_pwd);
+	{
+		if(var_exist(*my_env, "OLDPWD"))
+			change_var_value(my_env, "OLDPWD", old_pwd);
+		else
+		{
+			char *var = ft_strjoin1("OLDPWD", "=");
+			var = ft_strjoin1(var, old_pwd);
+			t_env *new = new_env(var);
+			if (new)
+				add_back_env(my_env, new);
+		}
+	}
 	if (new_pwd)
-		change_var_value(my_env, "PWD", new_pwd);
+	{
+		if(var_exist(*my_env, "PWD"))
+			change_var_value(my_env, "PWD", new_pwd);
+		else
+		{
+			char *var = ft_strjoin1("PWD", "=");
+			var = ft_strjoin1(var, old_pwd);
+			t_env *new = new_env(var);
+			if (new)
+				add_back_env(my_env, new);
+		}
+	}
 }
 
 int	ft_cd(char **argument, t_env **my_env, t_exec *executor)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 03:25:30 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/09 22:28:23 by mlouati          ###   ########.fr       */
+/*   Updated: 2025/02/10 15:14:39 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	exec_extern_cmd(t_list *cmd, t_env **my_env)
 		write(2, "Error: command not found: ", 26);
 		write(2, command, ft_strlen(command));
 		write(2, "\n", 1);
+		set_exit_status(127);
 		exit(127);
 	}
 }

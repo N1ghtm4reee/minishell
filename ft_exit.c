@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 03:31:40 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/10 14:06:58 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 15:18:50 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,7 @@ void	ft_exit(char **argument)
 	long long	num;
 
 	if (!argument[1])
-	{
-		set_exit_status(*(int *)(exit_status()));
-		exit(*(int *)(exit_status()));
-	}
+		exit(*(int *)exit_status());
 	if (argument[1] && !ft_is_number(argument[1]))
 		numeric_error(argument[1]);
 	error = 0;
@@ -55,7 +52,7 @@ void	ft_exit(char **argument)
 		numeric_error(argument[1]);
 	if (argument[2])
 	{
-		printf("bash: exit: too many arguments\n");
+		ft_printf(2, "bash: exit: too many arguments\n");
 		set_exit_status(1);
 		return ;
 	}
