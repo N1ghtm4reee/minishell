@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 03:31:40 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/09 22:06:52 by mlouati          ###   ########.fr       */
+/*   Updated: 2025/02/10 14:06:58 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ void	ft_exit(char **argument)
 
 	if (!argument[1])
 	{
-		set_exit_status(0);
-		exit(0);
+		set_exit_status(*(int *)(exit_status()));
+		exit(*(int *)(exit_status()));
 	}
 	if (argument[1] && !ft_is_number(argument[1]))
 		numeric_error(argument[1]);

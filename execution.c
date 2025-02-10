@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 22:46:37 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/10 11:34:31 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 14:10:42 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	exceute_cmds(t_exec *executor)
 	set_exit_status(0);
 	while (cmd)
 	{
-		if (cmd->type == 0)
+		// if (cmd->type == 0)
 			handle_pipes_and_execute(cmd, &pipes, executor);
 		cmd = cmd->next;
 	}

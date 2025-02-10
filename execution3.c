@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 21:05:05 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/10 11:10:06 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 14:17:15 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ void	handle_child_process_non_builtin(t_list *cmd, t_exec *executor,
 	}
 	if (handle_redirections(cmd) == -1)
 		exit(1);
-	exec_extern_cmd(cmd, &executor->env);
-	exit(EXIT_FAILURE);
+	if (!cmd->type)
+		exec_extern_cmd(cmd, &executor->env);
+		exit(EXIT_FAILURE);
 }
 
 void	exec_non_bultins(t_pipes *pipe, int *has_pipe, t_exec *executor,

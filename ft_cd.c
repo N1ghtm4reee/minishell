@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 22:10:18 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/09 22:24:10 by mlouati          ###   ########.fr       */
+/*   Updated: 2025/02/10 14:03:19 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	change_directory(char *dir)
 {
+	if (!dir)
+		return (0);
 	if (chdir(dir) == -1)
 	{
 		perror("failed to change to the directory\n");

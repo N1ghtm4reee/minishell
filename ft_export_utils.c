@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 01:42:22 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 10:31:13 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 14:02:44 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,10 @@ t_env	*new_env_special(char *str)
 		return (NULL);
 	new->var_name = ft_substr(str, 0, indice);
 	if (!new->var_name)
-		return (free(new), NULL);
+		return (NULL);
 	new->var_value = ft_substr(str, indice + 2, ft_strlen(str) - indice - 2);
 	if (!new->var_value)
-	{
-		free(new->var_name);
-		return (free(new), NULL);
-	}
+		return (NULL);
 	new->has_eq_ind = 1;
 	new->next = NULL;
 	return (new);

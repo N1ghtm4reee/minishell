@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 00:43:17 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/10 10:34:34 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 14:21:57 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,10 @@ int	handle_redirections(t_list *cmd)
 	int		ret;
 
 	ret = 0;
-	redir = cmd->next;
+	if (cmd->type == 0)
+		redir = cmd->next;
+	else
+		redir = cmd;
 	while (redir && (redir->type >= 2 && redir->type <= 5))
 	{
 		if (redir->type == 2)
