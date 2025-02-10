@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 23:10:43 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 11:34:48 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 17:47:04 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ static void	split_and_store(char *joined, t_exp *var)
 int	handle_env_var(t_exp *var, int *i, char quote_char)
 {
 	char	*word;
-	// char	*joined;
 
 	if (!quote_char || quote_char == '"')
 	{

@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:41:40 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 15:44:58 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 17:52:57 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,13 @@ bool							is_valid(char *str);
 // display
 void							ft_printf(int fd, char *s);
 // execution
+void	execute_normal_child(t_pipes *pipes, int has_pipe, t_exec *executor,
+		t_list *cmd);
+void	execute_built_in_parent(t_exec *executor, t_pipes *pipes, int has_pipe,
+		pid_t pid);
+void	execute_built_in_child(t_pipes *pipes, int has_pipe, t_exec *executor,
+		t_list *cmd);
+
 //  void exceute_cmds(t_exec *executor, t_env **env);
 void							exceute_cmds(t_exec *executor);
 bool							var_exist(t_env *my_env, char *str);

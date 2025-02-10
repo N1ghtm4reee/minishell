@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 04:56:49 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 12:42:46 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 17:46:32 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,8 @@ t_list	*process_command(t_exec *executor, t_list *node)
 t_list	*expand(t_exec *executor, t_list *commands)
 {
 	t_list	*p;
-	// char	*s;
-	// char	*expanded;
 
 	p = commands;
-	// s = NULL;
-	// expanded = NULL;
 	while (p)
 	{
 		p = process_command(executor, p);

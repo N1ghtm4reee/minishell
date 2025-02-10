@@ -6,74 +6,106 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 03:25:30 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/10 15:14:39 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 17:53:01 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*build_command_path(char *path, char *command)
+bool	built_in_cmd(t_list *cmd)
 {
-	char	*cmd_path;
-
-	cmd_path = ft_strjoin1(path, "/");
-	return (ft_strjoin1(cmd_path, command));
+	if (!ft_strcmp(cmd->command[0], "echo"))
+		return (true);
+	else if (!ft_strcmp(cmd->command[0], "pwd"))
+		return (true);
+	else if (!ft_strcmp(cmd->command[0], "cd"))
+		return (true);
+	else if (!ft_strcmp(cmd->command[0], "export"))
+		return (true);
+	else if (!ft_strcmp(cmd->command[0], "unset"))
+		return (true);
+	else if (!ft_strcmp(cmd->command[0], "env"))
+		return (true);
+	else if (!ft_strcmp(cmd->command[0], "exit"))
+		return (true);
+	else
+		return (false);
 }
 
-void	exec_command(char *cmd_path, t_list *cmd, t_env **my_env)
+void	exec_builtin(t_list *cmd, t_env **env, t_exec *executor)
 {
-	char	**env_exec;
-
-	env_exec = env_for_execv(*my_env);
-	execve(cmd_path, cmd->command, env_exec);
+	if (!ft_strcmp(cmd->command[0], "echo"))
+		set_exit_status(ft_echo(cmd->command));
+	else if (!ft_strcmp(cmd->command[0], "pwd"))
+		set_exit_status(ft_pwd(executor));
+	else if (!ft_strcmp(cmd->command[0], "cd"))
+		set_exit_status(ft_cd(cmd->command, env, executor));
+	else if (!ft_strcmp(cmd->command[0], "export"))
+		set_exit_status(ft_export(cmd->command, env));
+	else if (!ft_strcmp(cmd->command[0], "unset"))
+		set_exit_status(ft_unset(cmd->command, env));
+	else if (!ft_strcmp(cmd->command[0], "env"))
+		set_exit_status(ft_env(cmd->command, env));
+	else
+		ft_exit(cmd->command);
 }
 
-int	try_execute_command(char **paths, t_list *cmd, char *command,
-		t_env **my_env)
+void	execute_normal_child(t_pipes *pipes, int has_pipe, t_exec *executor,
+		t_list *cmd)
 {
-	int		i;
-	char	*cmd_path;
-
-	if (!paths)
-		return (0);
-	i = 0;
-	while (paths[i])
+	signal(SIGQUIT, handle_sigquit_child);
+	if (pipes->prev_fd != -1)
 	{
-		cmd_path = build_command_path(paths[i], command);
-		if (access(cmd_path, F_OK | X_OK) == 0)
-		{
-			exec_command(cmd_path, cmd, my_env);
-			return (1);
-		}
-		if (access(cmd_path, F_OK) == 0)
-		{
-			write(2, command, ft_strlen(command));
-			write(2, ": Permission denied", 19);
-			write(2, "\n", 1);
-			exit(126);
-		}
-		i++;
+		dup2(pipes->prev_fd, STDIN_FILENO);
+		close(pipes->prev_fd);
 	}
-	return (0);
+	if (has_pipe)
+	{
+		dup2(pipes->pipefd[1], STDOUT_FILENO);
+		close(pipes->pipefd[1]);
+		close(pipes->pipefd[0]);
+	}
+	if (handle_redirections(cmd) == -1)
+		exit(1);
+	exec_extern_cmd(cmd, &executor->env);
+	exit(EXIT_FAILURE);
 }
 
-void	exec_extern_cmd(t_list *cmd, t_env **my_env)
+void	execute_built_in_child(t_pipes *pipes, int has_pipe, t_exec *executor,
+		t_list *cmd)
 {
-	char	*command;
-	char	**paths;
-
-	if (!cmd || !cmd->command)
-		return ;
-	command = cmd->command[0];
-	if (command[0] == '.' || command[0] == '/')
-		path_ready(cmd, my_env);
-	paths = get_paths(*my_env);
-	if (!try_execute_command(paths, cmd, command, my_env))
+	signal(SIGQUIT, handle_sigquit_child);
+	signal(SIGINT, handle_ctrlc);
+	if (pipes->prev_fd != -1)
 	{
-		write(2, "Error: command not found: ", 26);
-		write(2, command, ft_strlen(command));
-		write(2, "\n", 1);
-		set_exit_status(127);
-		exit(127);
+		dup2(pipes->prev_fd, STDIN_FILENO);
+		close(pipes->prev_fd);
+	}
+	if (has_pipe)
+	{
+		dup2(pipes->pipefd[1], STDOUT_FILENO);
+		close(pipes->pipefd[1]);
+		close(pipes->pipefd[0]);
+	}
+	if (handle_redirections(cmd) == -1)
+		exit(1);
+	exec_builtin(cmd, &executor->env, executor);
+	exit(EXIT_SUCCESS);
+}
+
+void	execute_built_in_parent(t_exec *executor, t_pipes *pipes, int has_pipe,
+		pid_t pid)
+{
+	t_pids	*new;
+
+	signal(SIGINT, SIG_IGN);
+	new = new_pid(pid);
+	add_back_pid(&executor->pids, new);
+	if (pipes->prev_fd != -1)
+		close(pipes->prev_fd);
+	if (has_pipe)
+	{
+		close(pipes->pipefd[1]);
+		pipes->prev_fd = pipes->pipefd[0];
 	}
 }

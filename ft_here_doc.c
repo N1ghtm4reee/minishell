@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 05:40:41 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 12:44:47 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 17:46:01 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ int	count_here_docs(t_exec *executor)
 void	handle_here_doc(t_exec *executor)
 {
 	t_list		*p;
-	// t_sig		*stat;
 	static int	counter;
 	int			count;
 
@@ -101,7 +100,7 @@ void	handle_here_doc(t_exec *executor)
 		{
 			counter++;
 			if (read_here_doc(executor, p->next->command[0],
-							  counter))
+					counter))
 				counter++;
 		}
 		p = p->next;

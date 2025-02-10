@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 19:03:20 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 11:46:30 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 17:46:20 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	*process_dollar(t_expand_params *params)
 		&& ft_isdigit(params->s[*(params->i) + 1]))
 		return (handle_digit(params));
 	else if ((params->s[*(params->i) + 1]
-		&& ft_isalpha(params->s[*(params->i) + 1]))
+			&& ft_isalpha(params->s[*(params->i) + 1]))
 		|| params->s[*(params->i) + 1] == '_')
 		return (handle_alpha_underscore(params));
 	(*(params->i))++;

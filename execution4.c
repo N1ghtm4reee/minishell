@@ -6,39 +6,116 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 01:57:35 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 02:00:35 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 17:55:58 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	count_commands(t_list *c)
+char	**get_paths(t_env *my_env)
 {
-	int	i;
+	char	*str;
 
+	str = get_env_value(my_env, "PATH");
+	if (!str)
+		return (NULL);
+	return (ft_split(str, ':'));
+}
+char	**env_for_execv(t_env *env)
+{
+	int		size;
+	char	**array;
+	t_env	*temp;
+	int		i;
+
+	size = env_size(env);
+	array = gc_malloc(sizeof(char *) * (size + 1));
 	i = 0;
-	while (c)
+	temp = env;
+	while (temp)
 	{
-		if (!c->type)
-			i++;
-		c = c->next;
+		array[i] = ft_strjoin1(temp->var_name, "=");
+		array[i] = ft_strjoin1(array[i], temp->var_value);
+		temp = temp->next;
+		i++;
 	}
-	return (i);
+	array[i] = NULL;
+	return (array);
 }
 
-void	handle_parent_process(pid_t pid, t_exec *executor, t_pipes *pipe,
-		int *has_pipe)
+void	path_ready(t_list *cmd, t_env **my_env)
 {
-	t_pids	*new;
+	pid_t	pid;
+	char	**env_exec;
 
-	signal(SIGINT, SIG_IGN);
-	new = new_pid(pid);
-	add_back_pid(&executor->pids, new);
-	if (pipe->prev_fd != -1)
-		close(pipe->prev_fd);
-	if (*has_pipe)
+	if (access(cmd->command[0], F_OK | X_OK) == 0)
 	{
-		close(pipe->pipefd[1]);
-		pipe->prev_fd = pipe->pipefd[0];
+		env_exec = env_for_execv(*my_env);
+		execve(cmd->command[0], cmd->command, env_exec);
+	}
+	else if (access(cmd->command[0], F_OK) == 0)
+	{
+		write(2, cmd->command[0], ft_strlen(cmd->command[0]));
+		write(2, ": Permission denied", 19);
+		write(2, "\n", 1);
+		exit(126);
+	}
+	else
+	{
+		write(2, "Error : command not found: ", 27);
+		write(2, cmd->command[0], ft_strlen(cmd->command[0]));
+		write(2, "\n", 1);
+		exit(127);
+	}
+}
+
+void	exec_extern_cmd(t_list *cmd, t_env **my_env)
+{
+	char	**paths;
+	char	*command;
+	char	*cmd_path;
+	pid_t	pid;
+	int		i;
+	int		found;
+	char	**env_exec;
+
+	found = 0;
+	command = cmd->command[0];
+	if (command[0] == '.' || command[0] == '/')
+		path_ready(cmd, my_env);
+	paths = get_paths(*my_env);
+	if (!paths)
+	{
+		write(2, "Error : PATH not there\n", 23);
+		return ;
+	}
+	cmd_path = NULL;
+	i = 0;
+	while (paths[i])
+	{
+		cmd_path = ft_strjoin1(paths[i], "/");
+		cmd_path = ft_strjoin1(cmd_path, command);
+		if (access(cmd_path, F_OK | X_OK) == 0)
+		{
+			found = 1;
+			env_exec = env_for_execv(*my_env);
+			execve(cmd_path, cmd->command, env_exec);
+		}
+		else if (access(cmd_path, F_OK) == 0)
+		{
+			write(2, command, ft_strlen(command));
+			write(2, ": Permission denied", 19);
+			write(2, "\n", 1);
+			exit(126);
+		}
+		cmd_path = NULL;
+		i++;
+	}
+	if (!found)
+	{
+		write(2, "Error : command not found: ", 27);
+		write(2, command, ft_strlen(command));
+		write(2, "\n", 1);
+		exit(127);
 	}
 }

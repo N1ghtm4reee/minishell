@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:36:31 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 11:36:45 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 17:41:31 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,6 @@ int	check_if_limiter(char *s, int i)
 	}
 	return (1);
 }
-
-// static char	**split_env_value(char *value)
-// {
-// 	char	*trimmed;
-// 	char	**split;
-
-// 	if (!value)
-// 		return (NULL);
-// 	trimmed = ft_strtrim(value, " \t\n");
-// 	split = ft_split(trimmed, ' ');
-// 	return (split);
-// }
 
 int	here_doc_wait(t_sig *stats, int status)
 {
