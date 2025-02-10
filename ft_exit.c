@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 03:31:40 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/10 21:23:59 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 21:37:47 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,29 +30,27 @@ int	ft_is_number(char *str)
 	return (1);
 }
 
-void	numeric_error(char *str)
-{
-	printf("bash : exit: %s: numeric argument required\n", str);
-	set_exit_status(2);
-	exit(2);
-}
-
 void	ft_exit(char **argument)
 {
 	int			error;
 	long long	num;
 
+	error = 0;
 	if (!argument[1])
 		exit(get_exit_status());
 	if (argument[1] && !ft_is_number(argument[1]))
-		numeric_error(argument[1]);
-	error = 0;
+	{
+		printf("bash : exit: %s: numeric argument required\n", argument[1]);
+		set_exit_status(2);
+		exit(2);
+	}
 	num = ft_atoi(argument[1], &error);
 	if (error)
-		numeric_error(argument[1]);
+		return (printf("bash : exit: %s: numeric argument required\n",
+				argument[1]), exit(2));
 	if (argument[2])
 	{
-		ft_printf(2, "bash: exit: too many arguments\n");
+		printf("bash: exit: too many arguments\n");
 		set_exit_status(1);
 		return ;
 	}
