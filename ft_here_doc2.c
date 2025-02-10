@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 23:05:26 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 02:17:28 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 20:38:07 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 char	*handle_exit_status_case(int *i)
 {
-	int	*e;
+	int	e;
 
-	e = exit_status();
+	e = get_exit_status();
 	*i += 2;
-	return (ft_itoa(*e));
+	return (ft_itoa(e));
 }
 
 char	*handle_digit_case(char *s, int *i)

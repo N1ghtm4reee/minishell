@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 23:17:07 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/08 23:58:33 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 20:37:27 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ char	**init_result(void)
 
 void	handle_exit_status(t_exp *var, int *i)
 {
-	int	*e;
+	int	e;
 
-	e = exit_status();
-	var->new_str = ft_strjoin1(var->new_str, ft_itoa(*e));
+	e = get_exit_status();
+	var->new_str = ft_strjoin1(var->new_str, ft_itoa(e));
 	var->result[var->result_size] = ft_strjoin1(var->result[var->result_size],
 			ft_strdup(var->new_str));
 	var->new_str = ft_strdup("");

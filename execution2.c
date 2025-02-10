@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 03:25:30 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/10 17:53:01 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 20:28:31 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	execute_normal_child(t_pipes *pipes, int has_pipe, t_exec *executor,
 	if (handle_redirections(cmd) == -1)
 		exit(1);
 	exec_extern_cmd(cmd, &executor->env);
-	exit(EXIT_FAILURE);
+	exit(EXIT_SUCCESS);
 }
 
 void	execute_built_in_child(t_pipes *pipes, int has_pipe, t_exec *executor,
@@ -90,7 +90,7 @@ void	execute_built_in_child(t_pipes *pipes, int has_pipe, t_exec *executor,
 	if (handle_redirections(cmd) == -1)
 		exit(1);
 	exec_builtin(cmd, &executor->env, executor);
-	exit(EXIT_SUCCESS);
+	exit(EXIT_FAILURE);
 }
 
 void	execute_built_in_parent(t_exec *executor, t_pipes *pipes, int has_pipe,

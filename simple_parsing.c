@@ -6,25 +6,11 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:36:31 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 18:31:15 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 21:30:31 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	check_if_limiter(char *s, int i)
-{
-	i--;
-	while (i > 0)
-	{
-		if (s[i] == '<' && s[i - 1] == '<')
-			return (0);
-		if (ft_isalnum(s[i]))
-			break ;
-		i--;
-	}
-	return (1);
-}
 
 int	here_doc_wait(t_sig *stats, int status)
 {
@@ -76,8 +62,22 @@ int	parser(t_exec *executor, char *str)
 		return (1);
 	executor->tokens = append_tokens(executor->tokens);
 	executor->commands = ft_split_tokens(executor->tokens);
-	executor->commands_list = parse_list(executor->commands);
+	executor->commands_list = parse_list(executor->commands, executor);
 	executor->commands_list = expand(executor, executor->commands_list);
+	return (0);
+}
+
+int	here_doc(t_sig *stats, t_exec *executor)
+{
+	int	status;
+
+	stats->reading_from_here_doc = 1;
+	stats->pid = fork();
+	if (!stats->pid)
+		handle_here_doc(executor);
+	else if (stats->pid > 0)
+		return (waitpid(stats->pid, &status, 0),
+			here_doc_wait(stats, status));
 	return (0);
 }
 
@@ -85,7 +85,6 @@ int	simple_parsing(char *s, t_exec *executor)
 {
 	t_sig	*stats;
 	char	*str;
-	int		status;
 
 	stats = sig_handler();
 	str = ft_strtrim(ft_strdup(s), " \t\n\r\n\f");
@@ -97,14 +96,10 @@ int	simple_parsing(char *s, t_exec *executor)
 		return (set_exit_status(2), 1);
 	if (parser(executor, str))
 		return (set_exit_status(2), 1);
-	executor->here_doc_oho = *(int *)here_doc_flag();
 	if (!executor->commands_list)
 		return (1);
-	stats->reading_from_here_doc = 1;
-	stats->pid = fork();
-	if (!stats->pid)
-		handle_here_doc(executor);
-	else if (stats->pid > 0)
-		return (waitpid(stats->pid, &status, 0), here_doc_wait(stats, status));
+	executor->here_doc_oho = *(int *)here_doc_flag();
+	if (executor->has_here_doc)
+		return (here_doc(stats, executor));
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 17:47:45 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 18:52:28 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 20:26:51 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ void	wait_pids_function(t_exec *executor)
 	while (temp)
 	{
 		waitpid(temp->pid, &status, 0);
-		set_exit_status(WEXITSTATUS(status));
+		if (WIFEXITED(status))
+			set_exit_status(WEXITSTATUS(status));
 		if (WIFSIGNALED(status))
 		{
 			if ((WTERMSIG(status) == SIGQUIT))

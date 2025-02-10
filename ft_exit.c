@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 03:31:40 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/10 18:02:48 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 21:23:59 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ft_exit(char **argument)
 	long long	num;
 
 	if (!argument[1])
-		exit(*(int *)exit_status());
+		exit(get_exit_status());
 	if (argument[1] && !ft_is_number(argument[1]))
 		numeric_error(argument[1]);
 	error = 0;

@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 22:10:48 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 13:08:15 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 21:18:22 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_list	*initialize_head(char ***commands)
 	return (head);
 }
 
-t_list	*create_new_node(char **command, int previous_type)
+t_list	*create_new_node(char **command, int previous_type, t_exec *executor)
 {
 	t_list	*new_node;
 
@@ -56,6 +56,7 @@ t_list	*create_new_node(char **command, int previous_type)
 		new_node->type = 55;
 		if (has_quotes(command[0]))
 			set_here_doc_flag(1);
+		executor->has_here_doc = 1;
 	}
 	else
 		new_node->type = check_type(command[0]);
@@ -68,7 +69,7 @@ void	append_node(t_list **list, t_list *new_node)
 	*list = new_node;
 }
 
-t_list	*parse_list(char ***commands)
+t_list	*parse_list(char ***commands, t_exec *executor)
 {
 	t_list	*new_node;
 	t_list	*head;
@@ -86,7 +87,7 @@ t_list	*parse_list(char ***commands)
 	previous_type = head->type;
 	while (commands[++i])
 	{
-		new_node = create_new_node(commands[i], previous_type);
+		new_node = create_new_node(commands[i], previous_type, executor);
 		if (!new_node)
 			return (NULL);
 		append_node(&current, new_node);

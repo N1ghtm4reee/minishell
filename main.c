@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:42:23 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 19:05:00 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 21:22:29 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	setup_signals(void)
 void	init_executor(t_exec *executor, char **envp, t_env *my_env)
 {
 	unlink("here_doc");
+	executor->has_here_doc = 0;
 	executor->envp = envp;
 	executor->path = NULL;
 	executor->env = my_env;
@@ -79,5 +80,5 @@ int	main(int ac, char **av, char **envp)
 	executor.last_pwd = NULL;
 	shell_loop(&executor, envp, my_env, sig_state);
 	free_all_in_gc();
-	return (clear_history(), 0);
+	return (clear_history(), get_exit_status());
 }

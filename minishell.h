@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:41:40 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 19:03:15 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 21:30:21 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct s_pids
 
 typedef struct mini_exec
 {
+	int							has_here_doc;
 	int							here_doc_oho;
 	int							exit_status;
 	int							here_doc_fd;
@@ -142,7 +143,9 @@ void							set_here_doc_flag(int status);
 int								is_special(char c);
 
 // exit_status
-void							*exit_status(void);
+void							set_exit_status(int status);
+int								get_exit_status(void);
+int								*exit_status(void);
 void							set_exit_status(int status);
 void							*sig_handler(void);
 void							handle_sigquit_child(int sig_num);
@@ -282,7 +285,7 @@ int								count_commands(t_list *c);
 // parsing
 char							**ft_split_pipes(char *s);
 char							***ft_split_tokens(char **tokens);
-t_list							*parse_list(char ***commands);
+t_list							*parse_list(char ***commands, t_exec *executor);
 char							*handle_dollars(char *s);
 int								*which_to_expand(char *s, int type);
 char							*expand_quotes(char *s);

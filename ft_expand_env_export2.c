@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 22:43:32 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 00:02:11 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 20:37:54 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ char	*handle_digit(t_expand_params *params)
 
 char	*handle_exit_status_exp(int *i)
 {
-	int	*e;
+	int	e;
 
-	e = exit_status();
+	e = get_exit_status();
 	*i += 2;
-	return (ft_itoa(*e));
+	return (ft_itoa(e));
 }

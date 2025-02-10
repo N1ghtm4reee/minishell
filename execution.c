@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 18:52:19 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 18:52:19 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 21:19:34 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,21 @@ void	execute_built_in(t_exec *executor, t_pipes *pipes, int has_pipe,
 	{
 		pid = fork();
 		if (pid == 0)
+		{
 			execute_built_in_child(pipes, has_pipe, executor, cmd);
+			exit(get_exit_status());
+		}
 		else if (pid > 0)
+		{
 			execute_built_in_parent(executor, pipes, has_pipe, pid);
+		}
 		else
 			perror("fork failed");
 	}
 	else
 	{
 		if (handle_redirections(cmd) == -1)
-			exit(1);
+			return ;
 		exec_builtin(cmd, &executor->env, executor);
 	}
 }
@@ -95,7 +100,6 @@ void	exceute_cmds(t_exec *executor)
 
 	cmd = executor->commands_list;
 	init_execute_cmds(&pipes, &saved_std_in, &saved_std_out);
-	set_exit_status(0);
 	while (cmd)
 	{
 		if (cmd->type == 0)
