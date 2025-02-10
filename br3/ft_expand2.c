@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 20:48:30 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 13:13:40 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 02:14:28 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool	is_dollar_expandable(char *s, int i, char quote_char)
 {
-	return ((!quote_char || quote_char == '"') && check_if_limiter(s, i));
+	return ((!quote_char || quote_char == '"'));
 }
 
 char	**handle_export_command(t_exec *executor, t_list *node, int *arr)
@@ -35,7 +35,7 @@ char	**handle_export_command(t_exec *executor, t_list *node, int *arr)
 	ij[0] = 0;
 	while (new && new[++ij[1]])
 	{
-		while (new && new[ij[1]] && !new[ij[1]][0])
+		while (!node->type && new && new[ij[1]] && !new[ij[1]][0])
 			ij[1]++;
 		if (!new[ij[1]])
 			break ;

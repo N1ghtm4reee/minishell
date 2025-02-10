@@ -34,7 +34,7 @@ char	*ft_strjoin1(char *s1, char *s2)
 		s1 = ft_strdup("");
 	d = gc_malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!d)
-		return (free(s1), exit(1), NULL);
+		return (NULL);
 	if (s1)
 		while (s1[i])
 			d[j++] = s1[i++];

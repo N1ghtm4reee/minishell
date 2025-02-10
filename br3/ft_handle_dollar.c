@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 23:26:42 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 14:01:29 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 01:08:56 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ static int	is_double_dollar(const char *s, int i)
 char	*handle_dollars(char *s, int type)
 {
 	t_n_dol	var;
-	char	*new;
 
 	var.c = -2;
 	var.i = 0;

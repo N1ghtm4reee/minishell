@@ -3,156 +3,79 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:42:23 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 16:55:38 by mlouati          ###   ########.fr       */
+/*   Updated: 2025/02/10 03:06:05 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void *signal_state()
+void	handle_sigquit(int sig_num)
 {
-    static int sig_state = 0;
-
-    return &sig_state;
+	signal(SIGQUIT, SIG_IGN);
 }
 
-void *sig_handler()
+void	setup_signals(void)
 {
-    static t_sig stats;
-    // free_all_in_gc();
-    // close(STDERR_FILENO);
-    // close(STDOUT_FILENO);
-    // close(STDIN_FILENO);
-    return &stats;
+	struct sigaction	sa;
+
+	sa.sa_handler = handle_sigquit;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGQUIT, &sa, 0);
 }
 
-void handle_sigquit_child()
+void	init_executor(t_exec *executor, char **envp, t_env *my_env)
 {
-    t_sig *sig_stat = sig_handler();
-
-    // if (sig_stat->executing == 1)
-    // {
-        // write(2, "Quit (core dumped)\n", 19);
-        // // set_exit_status(131);
-        // sig_stat->executing = 0;
-        // kill(sig_stat->pid, SIGQUIT);
-    // }
-    // else if (sig_stat->executing == 0 && !sig_stat->reading_from_here_doc)
-    //     signal(SIGQUIT, SIG_IGN);
+	unlink("here_doc");
+	executor->envp = envp;
+	executor->path = NULL;
+	executor->env = my_env;
+	executor->here_doc_oho = 0;
+	executor->pids = NULL;
+	*(int *)(here_doc_flag()) = 0;
 }
 
-void handle_ctrlc_child()
+void	shell_loop(t_exec *executor, char **envp, t_env *my_env,
+		t_sig *sig_state)
 {
-    t_sig *stats = sig_handler();
-    int *sig_state = signal_state();
-    if (stats->reading_from_here_doc && !stats->executing)
-    {
-        write(1, "\n", 1);
-        rl_on_new_line();
-        rl_replace_line("", 0);
-        stats->reading_from_here_doc = 0;
-        exit(130);
-    }
+	char	*s;
+
+	s = NULL;
+	while (1)
+	{
+		init_executor(executor, envp, my_env);
+		signal(SIGINT, handle_ctrlc);
+		sig_state->executing = 0;
+		signal(SIGQUIT, SIG_IGN);
+		s = readline("minishell > ");
+		if (!s)
+		{
+			printf("exit\n");
+			break ;
+		}
+		add_history(s);
+		if (simple_parsing(s, executor) == 0)
+			exceute_cmds(executor);
+		free(s);
+	}
 }
 
-void handle_ctrlc()
+int	main(int ac, char **av, char **envp)
 {
-    t_sig *stats = sig_handler();
-    int *sig_state = signal_state();
+	t_exec	executor;
+	t_env	*my_env;
+	t_sig	*sig_state;
 
-    if (stats->executing == 0 && !stats->reading_from_here_doc)
-    {
-        write(1, "\n", 1);
-        rl_on_new_line();
-        rl_replace_line("", 0);
-        rl_redisplay();
-        set_exit_status(130);
-    }
-    else if (stats->executing == 1 && !stats->reading_from_here_doc)
-    {
-        write(1, "\n", 1);
-        rl_replace_line("", 0);
-        rl_redisplay();
-        set_exit_status(130);
-    }
-}
-
-void handle_sigquit()
-{
-    signal(SIGQUIT, SIG_IGN);
-}
-
-void setup_signals()
-{
-    struct sigaction sa;
-
-    sa.sa_handler = handle_sigquit;
-    sigemptyset(&sa.sa_mask);
-    sigaction(SIGQUIT, &sa, 0);
-}
-
-void init_executor(t_exec *executor, char **envp, t_env *my_env)
-{
-    executor->envp = envp;
-    executor->path = NULL;
-    executor->env = my_env;
-    executor->here_doc_oho = 0;
-    executor->pids = NULL;
-    executor->last_pwd = NULL; 
-}
-void    free_env(t_env *my_env)
-{
-    t_env *temp;
-    if(!my_env)
-        return;
-    temp = my_env;
-    t_env *del = NULL;
-    while(temp)
-    {
-        del = temp;
-        if(del->var_name)
-            free(del->var_name);
-        if(del->var_value)
-            free(del->var_value);
-        temp = temp->next;
-        free(del);
-    }
-}
-int main(int ac, char **av, char **envp)
-{
-    if (ac != 1)
-        return 1;
-    t_exec executor;
-    executor.path = NULL;
-    executor.envp = envp;
-    t_env *my_env = NULL;
-    signal(SIGINT, handle_ctrlc);
-    init_env(&my_env, envp);
-    executor.env = my_env;
-    executor.pids = NULL;
-    executor.last_pwd = NULL;
-    t_sig *sig_state = sig_handler();
-    while(1)
-    {
-        init_executor(&executor, envp, my_env);
-        signal(SIGINT, handle_ctrlc);
-        sig_state->executing = 0;
-        signal(SIGQUIT, SIG_IGN);
-        char *s = readline("minishell > ");
-        if (!s)
-        {
-            printf("exit\n");
-            break ;
-        }
-        add_history(s);
-        if (simple_parsing(s, &executor) == 0)
-            exceute_cmds(&executor);
-        free(s);
-    }
-    free_all_in_gc();
-    // free_env (my_env);
-    return (clear_history(), 0);
+	if (ac != 1)
+		return (1);
+	my_env = NULL;
+	signal(SIGINT, handle_ctrlc);
+	init_env(&my_env, envp);
+	sig_state = sig_handler();
+	executor.last_pwd = NULL;
+	shell_loop(&executor, envp, my_env, sig_state);
+	free_all_in_gc();
+	return (clear_history(), 0);
 }

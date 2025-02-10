@@ -6,63 +6,63 @@
 /*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 18:26:32 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 03:30:08 by mlouati          ###   ########.fr       */
+/*   Updated: 2025/02/09 20:48:33 by mlouati          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int equal_signe(char *str)
+int	equal_signe(char *str)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while(str[i] && str[i] != '=')
-        i++;
-    return(i);
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	return (i);
 }
 
-int equal_flag(char *str)
+int	equal_flag(char *str)
 {
-    if (!str)
-        return (0);
-    while (*str) 
-    {
-        if (*str == '=')
-            return (1);
-        str++;
-    }
-    return (0);
+	if (!str)
+		return (0);
+	while (*str)
+	{
+		if (*str == '=')
+			return (1);
+		str++;
+	}
+	return (0);
 }
 
-int env_size(t_env *env)
+int	env_size(t_env *env)
 {
-    t_env   *temp;
-    int     size;
+	t_env	*temp;
+	int		size;
 
-    if(!env)
-        return(0);
-    temp = env;
-    size = 0;
-    while(temp)
-    {
-        size++;
-        temp = temp->next;
-    }
-    return(size);
+	if (!env)
+		return (0);
+	temp = env;
+	size = 0;
+	while (temp)
+	{
+		size++;
+		temp = temp->next;
+	}
+	return (size);
 }
 
-void init_env(t_env **my_env, char **env)
+void	init_env(t_env **my_env, char **env)
 {
-    t_env   *new;
-    int     i;
+	t_env	*new;
+	int		i;
 
-    i = 0;
-    while(env[i])
-    {
-        new = new_env(env[i]);
-        if(new)
-            add_back_env(my_env, new);
-        i++;
-    }
+	i = 0;
+	while (env[i])
+	{
+		new = new_env(env[i]);
+		if (new)
+			add_back_env(my_env, new);
+		i++;
+	}
 }

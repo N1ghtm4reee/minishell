@@ -1,49 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*   execution4.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/07 18:08:01 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 13:05:49 by aakhrif          ###   ########.fr       */
+/*   Created: 2025/02/10 01:57:35 by aakhrif           #+#    #+#             */
+/*   Updated: 2025/02/10 02:00:35 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_special(char c)
-{
-	if (c == '>' || c == '<' || c == '|')
-		return (1);
-	return (0);
-}
-
-int	*here_doc_flag(void)
-{
-	static int	here_doc_oho;
-
-	return (&here_doc_oho);
-}
-
-void	set_here_doc_flag(int status)
-{
-	int	*f;
-
-	f = here_doc_flag();
-	*f = status;
-}
-
-int	has_quotes(char *s)
+int	count_commands(t_list *c)
 {
 	int	i;
 
 	i = 0;
-	while (s[i])
+	while (c)
 	{
-		if (s[i] == '\'' || s[i] == '"')
-			return (1);
-		i++;
+		if (!c->type)
+			i++;
+		c = c->next;
 	}
-	return (0);
+	return (i);
+}
+
+void	handle_parent_process(pid_t pid, t_exec *executor, t_pipes *pipe,
+		int *has_pipe)
+{
+	t_pids	*new;
+
+	signal(SIGINT, SIG_IGN);
+	new = new_pid(pid);
+	add_back_pid(&executor->pids, new);
+	if (pipe->prev_fd != -1)
+		close(pipe->prev_fd);
+	if (*has_pipe)
+	{
+		close(pipe->pipefd[1]);
+		pipe->prev_fd = pipe->pipefd[0];
+	}
 }

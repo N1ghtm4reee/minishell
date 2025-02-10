@@ -87,9 +87,9 @@ char	**ft_split_pipes(char *s)
 		skip_spaces(s, &i);
 		if (!s[i])
 			break ;
-		handle_non_operators(s, &i, arr, &k);
 		handle_double_operators(s, &i, arr, &k);
 		handle_single_operators(s, &i, arr, &k);
+		handle_non_operators(s, &i, arr, &k);
 	}
 	arr[k] = NULL;
 	return (arr);

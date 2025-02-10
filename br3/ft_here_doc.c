@@ -12,40 +12,6 @@
 
 #include "minishell.h"
 
-// char	*handle_dollar_in_here_doc(char *s, t_exec *executor, int *i)
-// {
-// 	char	*word;
-// 	char	*new_str;
-// 	int		*e;
-
-// 	new_str = ft_strdup("");
-// 	if (s[*i + 1] == '?')
-// 	{
-// 		e = exit_status();
-// 		new_str = ft_strjoin1(new_str, ft_itoa(*e));
-// 		*i += 2;
-// 	}
-// 	else if (ft_isdigit(s[*i + 1]))
-// 	{
-// 		(*i)++;
-// 		new_str = ft_strjoin1(new_str, (char[]){s[++(*i)], '\0'});
-// 		(*i)++;
-// 	}
-// 	else if (ft_isalpha(s[*i + 1]) || s[*i + 1] == '_')
-// 	{
-// 		(*i)++;
-// 		word = get_env_variable(executor, s, *i, i);
-// 		if (word)
-// 			new_str = ft_strjoin1(new_str, word);
-// 	}
-// 	else
-// 	{
-// 		new_str = ft_strjoin1(new_str, (char[]){s[*i], '\0'});
-// 		(*i)++;
-// 	}
-// 	return (new_str);
-// }
-
 char	*expand_here_doc(char *s, t_exec *executor)
 {
 	int		i;
@@ -125,7 +91,6 @@ void	handle_here_doc(t_exec *executor)
 	int			count;
 
 	p = executor->commands_list;
-	stat = signal_state();
 	count = count_here_docs(executor);
 	signal(SIGINT, handle_ctrlc_child);
 	if (count > HERE_DOC_MAX)

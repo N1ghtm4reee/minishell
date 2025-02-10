@@ -70,12 +70,10 @@ t_list	*expand(t_exec *executor, t_list *commands)
 {
 	t_list	*p;
 	char	*s;
-	int		should_expand;
 	char	*expanded;
 
 	p = commands;
 	s = NULL;
-	should_expand = 0;
 	expanded = NULL;
 	while (p)
 	{

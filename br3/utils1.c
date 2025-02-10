@@ -1,49 +1,51 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/07 18:08:01 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 13:05:49 by aakhrif          ###   ########.fr       */
+/*   Created: 2025/02/10 01:51:59 by aakhrif           #+#    #+#             */
+/*   Updated: 2025/02/10 02:06:14 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_special(char c)
+int	ft_isalpha(int c)
 {
-	if (c == '>' || c == '<' || c == '|')
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
 		return (1);
 	return (0);
 }
 
-int	*here_doc_flag(void)
+int	ft_isdigit(int c)
 {
-	static int	here_doc_oho;
-
-	return (&here_doc_oho);
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
 }
 
-void	set_here_doc_flag(int status)
+int	ft_isalnum(int c)
 {
-	int	*f;
-
-	f = here_doc_flag();
-	*f = status;
+	if (ft_isalpha(c) == 1 || ft_isdigit(c) == 1)
+		return (1);
+	return (0);
 }
 
-int	has_quotes(char *s)
+char	*append_str(char c)
 {
-	int	i;
+	char	*s;
 
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '\'' || s[i] == '"')
-			return (1);
-		i++;
-	}
+	s = gc_malloc(sizeof(char) * 2);
+	s[0] = c;
+	s[1] = '\0';
+	return (s);
+}
+
+int	ft_isspace(char c)
+{
+	if (c == ' ' || c == '\t' || c == '\v' || c == '\n' || c == '\f')
+		return (1);
 	return (0);
 }

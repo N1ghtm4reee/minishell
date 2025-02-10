@@ -29,6 +29,7 @@ int	handle_input_redirection(t_list *redir)
 	close(redir->next->fd_in);
 	return (0);
 }
+
 int	handle_output_redirection(t_list *redir)
 {
 	redir->next->fd_out = open(redir->next->command[0],
@@ -47,6 +48,7 @@ int	handle_output_redirection(t_list *redir)
 	close(redir->next->fd_out);
 	return (0);
 }
+
 int	handle_append_redirection(t_list *redir)
 {
 	redir->next->fd_out = open(redir->next->command[0],
@@ -65,6 +67,7 @@ int	handle_append_redirection(t_list *redir)
 	close(redir->next->fd_out);
 	return (0);
 }
+
 int	handle_here_doc_redirection(t_list *redir)
 {
 	redir->next->fd_in = open("here_doc", O_RDONLY);
@@ -80,30 +83,22 @@ int	handle_here_doc_redirection(t_list *redir)
 int	handle_redirections(t_list *cmd)
 {
 	t_list	*redir;
+	int		ret;
 
+	ret = 0;
 	redir = cmd->next;
 	while (redir && (redir->type >= 2 && redir->type <= 5))
 	{
-		if (redir->type == 2) // Input redirection
-		{
-			if (handle_input_redirection(redir) == -1)
-				return (-1);
-		}
-		else if (redir->type == 3) // Output redirection (>)
-		{
-			if (handle_output_redirection(redir) == -1)
-				return (-1);
-		}
-		else if (redir->type == 4) // Append (>>)
-		{
-			if (handle_append_redirection(redir) == -1)
-				return (-1);
-		}
-		else if (redir->type == 5) // Here-document (<<)
-		{
-			if (handle_here_doc_redirection(redir) == -1)
-				return (-1);
-		}
+		if (redir->type == 2)
+			ret = handle_input_redirection(redir);
+		else if (redir->type == 3)
+			ret = handle_output_redirection(redir);
+		else if (redir->type == 4)
+			ret = handle_append_redirection(redir);
+		else if (redir->type == 5)
+			ret = handle_here_doc_redirection(redir);
+		if (ret == -1)
+			return (-1);
 		redir = redir->next->next;
 	}
 	return (0);

@@ -17,8 +17,6 @@ char	**init_result(void)
 	char	**result;
 	int		i;
 
-	i = 0;
-	result = NULL;
 	result = gc_malloc(sizeof(char *) * 1024);
 	i = 0;
 	while (i < 1024)

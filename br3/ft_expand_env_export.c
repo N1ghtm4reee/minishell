@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 19:03:20 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/09 00:02:04 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 02:14:37 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ char	*expand_env_export(t_exec *executor, char *s, int *arr, int type)
 {
 	int				i;
 	char			*new_str;
-	char			*old_str;
 	char			*temp;
 	t_expand_params	params;
 
@@ -82,15 +81,13 @@ char	*expand_env_export(t_exec *executor, char *s, int *arr, int type)
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] == '$' && (!params.quote_char || params.quote_char == '"')
-			&& check_if_limiter(s, i))
+		if (s[i] == '$' && (!params.quote_char || params.quote_char == '"'))
 		{
 			params.counter++;
 			temp = process_dollar(&params);
 		}
 		else
 			temp = process_char(&params);
-		old_str = new_str;
 		new_str = ft_strjoin1(new_str, temp);
 	}
 	return (new_str);

@@ -6,7 +6,7 @@
 /*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 03:32:05 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/09 03:33:21 by mlouati          ###   ########.fr       */
+/*   Updated: 2025/02/09 22:07:28 by mlouati          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ int	valid_opt(char *str)
 	return (0);
 }
 
-void print_arguments(char **argument, int i, int new_line)
+void	print_arguments(char **argument, int i, int new_line)
 {
-    while (argument[i])
+	while (argument[i])
 	{
 		write(1, argument[i], ft_strlen(argument[i]));
 		if (argument[++i])
@@ -63,6 +63,6 @@ int	ft_echo(char **argument)
 		if (!argument[i])
 			return (EXIT_SUCCESS);
 	}
-    print_arguments(argument, i, new_line);
+	print_arguments(argument, i, new_line);
 	return (EXIT_SUCCESS);
 }
