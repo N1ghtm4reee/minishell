@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 22:10:18 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/10 17:46:44 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 19:04:52 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,30 +42,38 @@ int	cd_validate_and_change(char **argument, t_env **my_env)
 		return (change_directory(argument[1]));
 }
 
+void	update_old_pwd(t_env **my_env, char *old_pwd, char *var, t_env *new)
+{
+	if (var_exist(*my_env, "OLDPWD"))
+		change_var_value(my_env, "OLDPWD", old_pwd);
+	else
+	{
+		var = ft_strjoin1("OLDPWD", "=");
+		var = ft_strjoin1(var, old_pwd);
+		new = new_env(var);
+		if (new)
+			add_back_env(my_env, new);
+	}
+}
+
 void	update_pwd_variables(t_env **my_env, char *old_pwd, char *new_pwd)
 {
+	char	*var;
+	t_env	*new;
+
+	var = NULL;
+	new = NULL;
 	if (old_pwd)
-	{
-		if(var_exist(*my_env, "OLDPWD"))
-			change_var_value(my_env, "OLDPWD", old_pwd);
-		else
-		{
-			char *var = ft_strjoin1("OLDPWD", "=");
-			var = ft_strjoin1(var, old_pwd);
-			t_env *new = new_env(var);
-			if (new)
-				add_back_env(my_env, new);
-		}
-	}
+		update_old_pwd(my_env, old_pwd, var, new);
 	if (new_pwd)
 	{
-		if(var_exist(*my_env, "PWD"))
+		if (var_exist(*my_env, "PWD"))
 			change_var_value(my_env, "PWD", new_pwd);
 		else
 		{
-			char *var = ft_strjoin1("PWD", "=");
+			var = ft_strjoin1("PWD", "=");
 			var = ft_strjoin1(var, old_pwd);
-			t_env *new = new_env(var);
+			new = new_env(var);
 			if (new)
 				add_back_env(my_env, new);
 		}

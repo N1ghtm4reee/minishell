@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 03:24:36 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/10 17:45:01 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 18:10:00 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_pids	*new_pid(pid_t pid_value)
 {
 	t_pids	*new;
 
-	new = malloc(sizeof(t_pids));
+	new = gc_malloc(sizeof(t_pids));
 	if (!new)
 		return (NULL);
 	new->pid = pid_value;

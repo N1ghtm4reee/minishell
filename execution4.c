@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 01:57:35 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 17:55:58 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 19:03:33 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ char	**get_paths(t_env *my_env)
 		return (NULL);
 	return (ft_split(str, ':'));
 }
+
 char	**env_for_execv(t_env *env)
 {
 	int		size;
@@ -45,7 +46,6 @@ char	**env_for_execv(t_env *env)
 
 void	path_ready(t_list *cmd, t_env **my_env)
 {
-	pid_t	pid;
 	char	**env_exec;
 
 	if (access(cmd->command[0], F_OK | X_OK) == 0)
@@ -69,48 +69,48 @@ void	path_ready(t_list *cmd, t_env **my_env)
 	}
 }
 
+void	look_for_path(int *found, char *path, t_env **my_env, t_list *cmd)
+{
+	char	**env_exec;
+	char	*cmd_path;
+	char	*command;
+
+	command = cmd->command[0];
+	cmd_path = NULL;
+	cmd_path = ft_strjoin1(path, "/");
+	cmd_path = ft_strjoin1(cmd_path, command);
+	if (access(cmd_path, F_OK | X_OK) == 0)
+	{
+		*found = 1;
+		env_exec = env_for_execv(*my_env);
+		execve(cmd_path, cmd->command, env_exec);
+	}
+	else if (access(cmd_path, F_OK) == 0)
+	{
+		write(2, command, ft_strlen(command));
+		write(2, ": Permission denied", 19);
+		write(2, "\n", 1);
+		exit(126);
+	}
+}
+
 void	exec_extern_cmd(t_list *cmd, t_env **my_env)
 {
 	char	**paths;
 	char	*command;
-	char	*cmd_path;
-	pid_t	pid;
 	int		i;
 	int		found;
-	char	**env_exec;
 
+	if (!cmd || !cmd->command || !cmd->command[0])
+		return ;
 	found = 0;
 	command = cmd->command[0];
 	if (command[0] == '.' || command[0] == '/')
 		path_ready(cmd, my_env);
 	paths = get_paths(*my_env);
-	if (!paths)
-	{
-		write(2, "Error : PATH not there\n", 23);
-		return ;
-	}
-	cmd_path = NULL;
-	i = 0;
-	while (paths[i])
-	{
-		cmd_path = ft_strjoin1(paths[i], "/");
-		cmd_path = ft_strjoin1(cmd_path, command);
-		if (access(cmd_path, F_OK | X_OK) == 0)
-		{
-			found = 1;
-			env_exec = env_for_execv(*my_env);
-			execve(cmd_path, cmd->command, env_exec);
-		}
-		else if (access(cmd_path, F_OK) == 0)
-		{
-			write(2, command, ft_strlen(command));
-			write(2, ": Permission denied", 19);
-			write(2, "\n", 1);
-			exit(126);
-		}
-		cmd_path = NULL;
-		i++;
-	}
+	i = -1;
+	while (paths[++i])
+		look_for_path(&found, paths[i], my_env, cmd);
 	if (!found)
 	{
 		write(2, "Error : command not found: ", 27);

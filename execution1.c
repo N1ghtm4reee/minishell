@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 17:47:45 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 17:53:11 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 18:52:28 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,3 @@ void	wait_pids_function(t_exec *executor)
 		temp = temp->next;
 	}
 }
-

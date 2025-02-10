@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:36:31 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 17:41:31 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/10 18:31:15 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,35 @@ int	here_doc_wait(t_sig *stats, int status)
 	return (0);
 }
 
+char	**append_tokens(char **tokens)
+{
+	char	**new_tokens;
+	int		i;
+	int		j;
+
+	i = 0;
+	while (tokens[i])
+		i++;
+	new_tokens = gc_malloc(sizeof(char *) * (i + 2));
+	if (!new_tokens)
+		return (NULL);
+	j = 0;
+	new_tokens[j++] = ft_strdup("");
+	while (tokens[j - 1])
+	{
+		new_tokens[j] = tokens[j - 1];
+		j++;
+	}
+	new_tokens[j] = NULL;
+	return (new_tokens);
+}
+
 int	parser(t_exec *executor, char *str)
 {
 	executor->tokens = ft_split_pipes(str);
 	if (syntax_error(executor->tokens))
 		return (1);
+	executor->tokens = append_tokens(executor->tokens);
 	executor->commands = ft_split_tokens(executor->tokens);
 	executor->commands_list = parse_list(executor->commands);
 	executor->commands_list = expand(executor, executor->commands_list);
