@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:41:40 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/10 21:30:21 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 10:54:58 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ typedef struct sig_hand
 	pid_t						pid;
 }								t_sig;
 
-// void   handle_sigquit_child(void);
 int								has_quotes(char *s);
 int								is_special_str(char *s);
 int								syntax_error(char **cmds);
@@ -111,24 +110,19 @@ typedef struct mini_exec
 {
 	int							has_here_doc;
 	int							here_doc_oho;
-	int							exit_status;
+	// int							exit_status;
 	int							here_doc_fd;
 	char						**path;
 	char						**tokens;
 	char						***commands;
-	// char **special_chars;
-	// int cmd_size;
 	t_list						*commands_list;
 	t_env						*env;
 	t_pids						*pids;
-	// char *command_path;
-	// char **full_command;
 	char						**envp;
 	char						*last_pwd;
 	char						*pwd;
 	char						*old_pwd;
-	// t_here_doc *here_docs;
-	t_execution					*exec;
+	// t_execution					*exec;
 }								t_exec;
 
 // parsing
@@ -192,7 +186,8 @@ int								ft_cd(char **argument, t_env **env,
 int								ft_unset(char **argument, t_env **my_env);
 
 // export special_case
-
+void							signinthandler(int sig);
+void							sig_quit(int sig);
 int								is_special_case(char *str);
 void							export_special_case(t_env **my_env, char *str);
 void							change_var_value_special(t_env **my_env,
@@ -215,7 +210,6 @@ void							execute_built_in_child(t_pipes *pipes,
 									int has_pipe, t_exec *executor,
 									t_list *cmd);
 
-//  void exceute_cmds(t_exec *executor, t_env **env);
 void							exceute_cmds(t_exec *executor);
 bool							var_exist(t_env *my_env, char *str);
 char							**convert_env(t_env *env);
@@ -224,7 +218,7 @@ void							change_var_value(t_env **my_env, char *str_name,
 									char *str_value);
 char							**env_for_execv(t_env *env);
 int								handle_redirections(t_list *cmd);
-
+int								cmds_count(t_list *cmds);
 void							exec_extern_cmd(t_list *cmd, t_env **my_env);
 int								try_execute_command(char **paths, t_list *cmd,
 									char *command, t_env **my_env);
@@ -259,11 +253,9 @@ int								ft_strlen(char *s);
 void							*ft_calloc(size_t count, size_t size);
 int								ft_strcmp(char *s1, char *s2);
 char							*ft_itoa(int n);
-// int is_special_char(char *s);
 char							*ft_strtrim(char const *s1, char const *set);
 int								is_special(char c);
 char							*ft_substr(char *s, int start, int len);
-// int  ft_atoi(char *str);
 char							*ft_substr_malloc(char *s, int start, int len);
 char							*ft_strdup_malloc(const char *s);
 long long						ft_atoi(char *str, int *error);
@@ -288,7 +280,7 @@ char							***ft_split_tokens(char **tokens);
 t_list							*parse_list(char ***commands, t_exec *executor);
 char							*handle_dollars(char *s);
 int								*which_to_expand(char *s, int type);
-char							*expand_quotes(char *s);
+char							*expand_quotes(char *s, int type);
 char							*expand_env_export(t_exec *executor, char *s,
 									int *arr, int type);
 char							*get_env_variable(t_exec *executor, char *s,
@@ -297,7 +289,6 @@ void							handle_here_doc(t_exec *executor);
 char							**expand_env(t_exec *executor, char **commands,
 									int type);
 t_list							*expand(t_exec *executor, t_list *commands);
-// char *expand_env_export(t_exec *executor, char *s, int *arr, int type);
 int								handle_here_doc_error(t_exec *executor,
 									char *limiter, int counter,
 									t_sig *signal_stat);
@@ -328,7 +319,7 @@ int								is_in_arr(int counter, int *arr);
 char							*append_str(char c);
 char							*append_str(char c);
 int								ft_isspace(char c);
-
+char							**ft_split_custom(char *s, char c);
 // norm structs
 typedef struct norm
 {
