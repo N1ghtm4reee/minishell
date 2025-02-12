@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 20:48:30 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/12 10:53:35 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 18:37:50 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,15 @@ bool	is_dollar_expandable(char quote_char)
 	return ((!quote_char || quote_char == '"'));
 }
 
-char	*expand_quotes_custom(char *s)
+char	*expand_quotes_custom(char *s, int type)
 {
 	char		*new_str;
 	static int	found_quote;
 	static char	quote_type;
 	int			i;
 
+	if ((!ft_strcmp(s, "\'\'") || !ft_strcmp(s, "\"\"")) && !type)
+		return (ft_strdup(" "));
 	new_str = ft_strdup("");
 	i = -1;
 	while (s[++i])
@@ -55,7 +57,7 @@ char	**handle_export_command(t_exec *executor, t_list *node)//hna
 	while (new && new[++ij[1]])
 	{
 		if (new[ij[1]] && new[ij[1]][0])
-			new[ij[1]] = expand_quotes_custom(new[ij[1]]);
+			new[ij[1]] = expand_quotes_custom(new[ij[1]], node->type);
 	}
 	n = gc_malloc(sizeof(char *) * (ij[1] + 1));
 	ij[1] = -1;

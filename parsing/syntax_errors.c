@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:56:30 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/12 16:15:04 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 18:43:24 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,17 @@ int	syntax_error(char **cmds)
 	i = 0;
 	while (cmds && cmds[i] && cmds[i + 1])
 	{
-		if ((check_type(cmds[i]) == 1) && (check_type(cmds[i + 1]) == 1))
+		if (check_type(cmds[i]) == 1 && check_type(cmds[i + 1]) == 1)
 			return (ft_printf(2,
 					"Syntax error: Consecutive operators\n"), 1);
 		if ((check_type(cmds[i]) != 1 && check_type(cmds[i]) != 0)
 			&& (check_type(cmds[i + 1]) == 1))
-			return (ft_printf(2, "Syntax error: Consecutive operators\n"), 1);
+			return (ft_printf(2,
+					"Syntax error: Consecutive operators\n"), 1);
+		if ((check_type(cmds[i]) && check_type(cmds[i]) != 1)
+			&& check_type(cmds[i + 1]))
+			return (ft_printf(2,
+					"Syntax error: Consecutive operators\n"), 1);
 		i++;
 	}
 	return (0);

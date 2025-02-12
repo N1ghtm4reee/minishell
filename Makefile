@@ -1,6 +1,6 @@
 CC = cc
 READLINE = -lreadline
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -fsanitize=address
 
 P_SRC = $(addprefix ./parsing/, ft_split_custom.c expand_env.c expand_env2.c expand_env3.c expand_quotes.c expand_quotes1.c ft_expand_env_export.c ft_expand_env_export2.c  \
 		ft_handle_dollar.c ft_here_doc.c ft_here_doc2.c ft_split_tokens.c ft_splite_pipes.c parse_list.c parsing_utils.c ft_expand2.c \
