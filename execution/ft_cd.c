@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 22:10:18 by mlouati           #+#    #+#             */
-/*   Updated: 2025/02/11 16:43:27 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 14:55:32 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	change_directory(char *dir)
 	return (0);
 }
 
-int	cd_validate_and_change(char **argument, t_env **my_env)
+int	cd_validate_and_change(char **argument)
 {
 	int	ac;
 
@@ -36,8 +36,6 @@ int	cd_validate_and_change(char **argument, t_env **my_env)
 		write(2, "bash : cd : too many arguments\n", 31);
 		return (1);
 	}
-	if (ac == 1 || (ac == 2 && !ft_strcmp(argument[1], "~")))
-		return (change_directory(get_env_value(*my_env, "HOME")));
 	else
 		return (change_directory(argument[1]));
 }
@@ -88,7 +86,7 @@ int	ft_cd(char **argument, t_env **my_env, t_exec *executor)
 	char	*new_pwd;
 
 	old_pwd = getcwd(old_buff, 4096);
-	if (cd_validate_and_change(argument, my_env))
+	if (cd_validate_and_change(argument))
 		return (1);
 	new_pwd = getcwd(new_buff, 4096);
 	if (new_pwd)
