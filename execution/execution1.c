@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 17:47:45 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/11 16:43:12 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 15:08:19 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,13 @@ void	reset_fds_std(int saved_std_in, int saved_std_out)
 	close(saved_std_in);
 	close(saved_std_out);
 	unlink("here_doc");
+}
+
+void	core_dumped(t_exec *executor)
+{
+	if (!executor->core)
+		write(2, "Quit (core dumped)\n", 19);
+	executor->core = 1;
 }
 
 void	wait_pids_function(t_exec *executor)
@@ -39,7 +46,7 @@ void	wait_pids_function(t_exec *executor)
 		{
 			if ((WTERMSIG(status) == SIGQUIT))
 			{
-				write(2, "Quit (core dumped)\n", 19);
+				core_dumped(executor);
 				set_exit_status(131);
 			}
 			else if (WTERMSIG(status) == SIGINT)

@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:41:40 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/12 10:54:58 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 14:51:15 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ typedef struct s_pids
 
 typedef struct mini_exec
 {
+	int							core;
 	int							has_here_doc;
 	int							here_doc_oho;
 	// int							exit_status;

@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 01:57:35 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/12 11:13:48 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 15:08:40 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,14 @@ void	path_ready(t_list *cmd, t_env **my_env)
 {
 	char	**env_exec;
 
-	if (access(cmd->command[0], F_OK | X_OK) == 0)
+	if (ft_strcmp(cmd->command[0], "..") && ft_strcmp(cmd->command[0], ".")
+		&& access(cmd->command[0], F_OK | X_OK) == 0)
 	{
 		env_exec = env_for_execv(*my_env);
 		execve(cmd->command[0], cmd->command, env_exec);
 	}
-	else if (access(cmd->command[0], F_OK) == 0)
+	else if (ft_strcmp(cmd->command[0], "..") && ft_strcmp(cmd->command[0], ".")
+		&& access(cmd->command[0], F_OK) == 0)
 	{
 		write(2, cmd->command[0], ft_strlen(cmd->command[0]));
 		write(2, ": Permission denied", 19);
