@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:49:19 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/11 16:45:06 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 19:45:28 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,11 @@ void	here_doc_max_error(void)
 	ft_printf(2, "to many here_docs\n");
 	set_exit_status(2);
 	exit(2);
+}
+
+void	cmd_not_found(char *cmd)
+{
+	write(2, "Error : command not found: ", 27);
+	write(2, cmd, ft_strlen(cmd));
+	write(2, "\n", 1);
 }

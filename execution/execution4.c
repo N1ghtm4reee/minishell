@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 01:57:35 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/12 15:08:40 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 19:45:20 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,14 @@ void	path_ready(t_list *cmd, t_env **my_env)
 		write(2, "\n", 1);
 		exit(126);
 	}
-	else
+	else if (ft_strcmp(cmd->command[0], ".") == 0)
 	{
-		write(2, "Error : command not found: ", 27);
-		write(2, cmd->command[0], ft_strlen(cmd->command[0]));
-		write(2, "\n", 1);
-		exit(127);
+		ft_printf(2, "bash: .: filename argument required\n");
+		ft_printf(2, ".: usage: . filename [arguments]\n");
+		exit(2);
 	}
+	else
+		return (cmd_not_found(cmd->command[0]), exit(127));
 }
 
 void	look_for_path(int *found, char *path, t_env **my_env, t_list *cmd)

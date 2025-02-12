@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:41:40 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/12 14:51:15 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 19:45:50 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,6 +243,7 @@ void							handle_parent_process(pid_t pid,
 									t_exec *executor, t_pipes *pipe,
 									int *has_pipe);
 // utils
+void							cmd_not_found(char *cmd);
 int								ft_isspace(char c);
 int								ft_isalpha(int c);
 int								ft_isdigit(int c);
