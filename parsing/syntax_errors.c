@@ -6,7 +6,7 @@
 /*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:56:30 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/11 16:44:59 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 16:16:49 by aakhrif          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,26 @@ int	check_unmatched_quotes(char *s)
 
 int	syntax_errors(char *s)
 {
+	(void)s;
 	if ((s[0] == '|') || is_special(s[ft_strlen(s) - 1]) == 1)
 		return (ft_printf(2, "Syntax error: Invalid Operator place\n"), 1);
 	if (check_unmatched_quotes(s))
 		return (ft_printf(2, "Syntax error: Unmatched quotes\n"), 1);
+	return (0);
+}
+
+static int	check_type(char *s)
+{
+	if (!ft_strcmp(s, "|"))
+		return (1);
+	if (!ft_strcmp(s, ">>"))
+		return (2);
+	if (!ft_strcmp(s, "<<"))
+		return (3);
+	if (!ft_strcmp(s, ">"))
+		return (4);
+	if (!ft_strcmp(s, "<"))
+		return (5);
 	return (0);
 }
 
@@ -57,7 +73,11 @@ int	syntax_error(char **cmds)
 	i = 0;
 	while (cmds && cmds[i] && cmds[i + 1])
 	{
-		if ((is_special_str(cmds[i]) && is_special_str(cmds[i + 1])))
+		if ((check_type(cmds[i]) == 1) && (check_type(cmds[i + 1]) == 1))
+			return (ft_printf(2,
+					"Syntax error: Consecutive operators\n"), 1);
+		if ((check_type(cmds[i]) != 1 && check_type(cmds[i]) != 0)
+			&& (check_type(cmds[i + 1]) == 1))
 			return (ft_printf(2, "Syntax error: Consecutive operators\n"), 1);
 		i++;
 	}
