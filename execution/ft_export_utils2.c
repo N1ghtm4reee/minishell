@@ -3,14 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_utils2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 02:06:47 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/11 16:43:51 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 16:38:06 by mlouati          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+bool	var_exist(t_env *my_env, char *str)
+{
+	t_env	*temp;
+
+	temp = my_env;
+	while (temp)
+	{
+		if (!ft_strcmp(temp->var_name, str))
+			return (true);
+		temp = temp->next;
+	}
+	return (false);
+}
 
 bool	is_valid(char *str)
 {

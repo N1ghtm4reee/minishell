@@ -3,27 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 00:54:29 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/11 16:43:54 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 16:37:44 by mlouati          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-bool	var_exist(t_env *my_env, char *str)
+void	change_var_value_export(t_env **my_env, char *str_name,
+		char *str_value, char *var)
 {
 	t_env	*temp;
 
-	temp = my_env;
+	temp = *my_env;
 	while (temp)
 	{
-		if (!ft_strcmp(temp->var_name, str))
-			return (true);
+		if (!ft_strcmp(temp->var_name, str_name))
+		{
+			temp->has_eq_ind = equal_flag(var);
+			temp->var_value = ft_strdup(str_value);
+			break ;
+		}
 		temp = temp->next;
 	}
-	return (false);
 }
 
 void	change_var_value(t_env **my_env, char *str_name, char *str_value)
@@ -58,7 +62,7 @@ void	export_to_env(t_env **my_env, char *var)
 	if (!str_name)
 		return ;
 	if (var_exist(*my_env, str_name))
-		change_var_value(my_env, str_name, str_value);
+		change_var_value_export(my_env, str_name, str_value, var);
 	else
 	{
 		new = new_env(var);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakhrif <aakhrif@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mlouati <mlouati@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 17:59:07 by aakhrif           #+#    #+#             */
-/*   Updated: 2025/02/11 16:45:24 by aakhrif          ###   ########.fr       */
+/*   Updated: 2025/02/12 16:44:42 by mlouati          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,38 +70,4 @@ char	*ft_substr(char *s, int start, int len)
 	}
 	sub[i] = '\0';
 	return (sub);
-}
-
-int	get_sign(char c)
-{
-	if (c == '-')
-		return (-1);
-	return (1);
-}
-
-long long	ft_atoi(char *str, int *error)
-{
-	int			i;
-	int			signe;
-	long long	res;
-	int			start;
-
-	i = 0;
-	signe = 1;
-	res = 0;
-	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	if (str[i] == '+' || str[i] == '-')
-		signe = get_sign(str[i++]);
-	while (str[i] == '0')
-		i++;
-	start = 0;
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		res = res * 10 + (str[i++] - '0');
-		start++;
-	}
-	if (start >= 20 || res * signe > LONG_MAX || res * signe < LONG_MIN)
-		*error = 1;
-	return (signe * res);
 }

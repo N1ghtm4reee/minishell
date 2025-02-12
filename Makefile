@@ -9,7 +9,7 @@ P_SRC = $(addprefix ./parsing/, ft_split_custom.c expand_env.c expand_env2.c exp
 E_SRC = main.c $(addprefix ./execution/, envir.c execution.c execution1.c execution2.c execution4.c ft_cd.c ft_echo.c ft_env.c ft_exit.c \
 		ft_export_utils.c ft_export_utils2.c ft_export.c   ft_pwd.c ft_unset.c pids.c redirections.c)
 
-UTL_SRC = $(addprefix ./utils/, ft_split.c ft_itoa.c display.c exit_status.c ft_strjoin.c ft_strtrim.c gc.c signals.c utils.c utils1.c utils2.c )
+UTL_SRC = $(addprefix ./utils/, ft_split.c ft_itoa.c display.c exit_status.c ft_strjoin.c ft_strtrim.c gc.c signals.c utils.c utils1.c utils2.c utils3.c)
 
 E_OBJ = $(E_SRC:.c=.o)
 
